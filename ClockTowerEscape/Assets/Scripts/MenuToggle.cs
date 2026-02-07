@@ -20,4 +20,10 @@ public class MenuToggle : MonoBehaviour
             UIMenu.SetActive(isMenuOpen);
         }
     }
+
+    public void CloseMenu()
+    {
+        isMenuOpen = false;
+        UIMenu.SetActive(false);
+    }
 }
