@@ -22,6 +22,8 @@ public class Bell : MonoBehaviour
     private Quaternion initialRotation;
     private Coroutine ringRoutine;
 
+    int hand_colliders_inside = 0;
+
     void Start()
     {
         initialRotation = transform.localRotation;
@@ -48,7 +50,7 @@ public class Bell : MonoBehaviour
             RaycastInteractable interactable = GetComponent<RaycastInteractable>();
             if (interactable != null)
             {
-                interactable.GazeExit(); // Remove emission immediately BEFORE disabling
+                interactable.GazeExit(); 
                 interactable.enableHighlight = false;
                 interactable.enabled = false;
             }
@@ -105,5 +107,21 @@ public class Bell : MonoBehaviour
             yield return null;
         }
         transform.localRotation = endRotation;
+    }
+
+
+  // ========== VR Trigger Interaction ==========
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Hand"))
+        {
+            hand_colliders_inside++;
+
+            if(hand_colliders_inside == 1 && ringRoutine == null)
+             {
+                StartRinging();
+             }
+        }
     }
 }
