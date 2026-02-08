@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - Interactable
+  - CompletedBurger
+  - Hand
+  - DispenserSpawnPlatform
+  - DispenserButton1
+  - DroppedItemSnap
+  - DroppedItemDisplay
   layers:
   - Default
   - TransparentFX
