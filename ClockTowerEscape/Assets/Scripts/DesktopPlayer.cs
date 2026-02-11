@@ -35,6 +35,16 @@ public class DesktopPlayer : MonoBehaviour
         if (playerCamera != null)
             playerCamera.localRotation = Quaternion.identity;
     }
+    
+    public void SetMoveSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
+    public void SetSensitivity(float sensitivity)
+    {
+        mouseSensitivity = sensitivity;
+    }
 
     void Update()
     {
