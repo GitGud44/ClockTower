@@ -10,6 +10,8 @@ TagManager:
   - DispenserButton1
   - DroppedItemSnap
   - DroppedItemDisplay
+  - Interactable
+  - Candle
   layers:
   - Default
   - TransparentFX
