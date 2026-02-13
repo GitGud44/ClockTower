@@ -21,6 +21,12 @@ public class DesktopPlayer : MonoBehaviour
     private RaycastInteractable lastTarget = null;
     private DesktopGrabbable currentlyHeld = null;
 
+    // Public getter for currently held object (used by LanternInteractable to check if holding candle)
+    public DesktopGrabbable GetHeldObject()
+    {
+        return currentlyHeld;
+    }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -55,7 +61,7 @@ public class DesktopPlayer : MonoBehaviour
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
         {
-            RaycastInteractable target = hit.collider.GetComponent<RaycastInteractable>();
+            RaycastInteractable target = hit.collider.GetComponentInParent<RaycastInteractable>();
             
             // Started looking at a new interactable
             if (target != null && target != lastTarget)
@@ -76,11 +82,16 @@ public class DesktopPlayer : MonoBehaviour
             {
                 target.Click();
             }
+            // Use/interact while holding something (E key only, to avoid conflicts with mouse release)
+            else if (target != null && currentlyHeld != null && Keyboard.current.eKey.wasPressedThisFrame)
+            {
+                target.Click();
+            }
             
             // Grab: mouse pressed on a grabbable object
             if (currentlyHeld == null && Mouse.current.leftButton.wasPressedThisFrame)
             {
-                DesktopGrabbable grabbable = hit.collider.GetComponent<DesktopGrabbable>();
+                DesktopGrabbable grabbable = hit.collider.GetComponentInParent<DesktopGrabbable>();
                 if (grabbable != null && holdPoint != null)
                 {
                     grabbable.Grab(holdPoint);
