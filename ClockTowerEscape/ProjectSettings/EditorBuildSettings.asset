@@ -5,9 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Keeper'sQuarter.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Belfry(Irina).unity
+    guid: 3427ee950c8cd4bb29240fc35b835a96
+  - enabled: 1
+    path: Assets/Scenes/ElevatorArrivalDemo.unity
+    guid: b53e4a19712b54f0883fd7d855e82ac0
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 246fb37ed75698543ac14b7e89f37619, type: 2}
