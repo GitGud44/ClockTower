@@ -54,10 +54,11 @@ public class LanternInteractable : MonoBehaviour
     {
         if (isLit) return; // Already lit, do nothing
 
+        // Only allow trigger-based lighting in VR mode (skip if desktop player is active)
         DesktopPlayer player = FindAnyObjectByType<DesktopPlayer>();
         if (player != null && player.gameObject.activeInHierarchy)
             return;
-            
+
         // Check if the colliding object is the candle
         if (other.CompareTag(candleTag))
         {
