@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,9 +9,9 @@ public class LanternPuzzleManager : MonoBehaviour
     [Tooltip("Drag the 6 lanterns in the CORRECT lighting order from the scene")]
     public LanternInteractable[] correctOrder;
 
-    [Header("References")]
-    [Tooltip("The elevator door placeholder to deactivate when puzzle is solved")]
-    public GameObject elevatorDoor;
+    [Header("Events")]
+    [Tooltip("Fired when the puzzle is solved. Wire to ElevatorController.UnlockAndOpenDoors.")]
+    public UnityEvent OnPuzzleSolved;
 
     [Header("Audio Clip Indices")]
     [Tooltip("Index in GameManager.audioClips for the LightLantern sound")]
@@ -89,8 +90,7 @@ public class LanternPuzzleManager : MonoBehaviour
         if (GameManager.Instance != null && successSoundIndex >= 0)
             GameManager.Instance.PlaySound(successSoundIndex);
 
-        // Hide the elevator door placeholder
-        if (elevatorDoor != null)
-            elevatorDoor.SetActive(false);
+        // Trigger the elevator to unlock and open
+        OnPuzzleSolved?.Invoke();
     }
 }

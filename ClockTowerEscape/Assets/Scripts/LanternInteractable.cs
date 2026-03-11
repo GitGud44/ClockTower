@@ -54,6 +54,10 @@ public class LanternInteractable : MonoBehaviour
     {
         if (isLit) return; // Already lit, do nothing
 
+        DesktopPlayer player = FindAnyObjectByType<DesktopPlayer>();
+        if (player != null && player.gameObject.activeInHierarchy)
+            return;
+            
         // Check if the colliding object is the candle
         if (other.CompareTag(candleTag))
         {
