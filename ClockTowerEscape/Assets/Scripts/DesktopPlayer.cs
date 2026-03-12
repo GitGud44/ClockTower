@@ -57,9 +57,12 @@ public class DesktopPlayer : MonoBehaviour
         HandleMouseLook();
         HandleMovement();
         
-        // Cast ray from camera (QueryTriggerInteraction.Collide makes it hit trigger colliders too)
+        // Cast ray from camera, ignoring colliders on the held object so it doesn't block aiming
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
+        SetHeldCollidersEnabled(false);
+        bool didHit = Physics.Raycast(ray, out RaycastHit hit, interactionRange, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide);
+        SetHeldCollidersEnabled(true);
+        if (didHit)
         {
             RaycastInteractable target = hit.collider.GetComponentInParent<RaycastInteractable>();
             
@@ -118,6 +121,13 @@ public class DesktopPlayer : MonoBehaviour
     public void SetHeldObject(DesktopGrabbable grabbable)
     {
         currentlyHeld = grabbable;
+    }
+
+    private void SetHeldCollidersEnabled(bool enabled)
+    {
+        if (currentlyHeld == null) return;
+        foreach (Collider col in currentlyHeld.GetComponentsInChildren<Collider>())
+            col.enabled = enabled;
     }
 
     void HandleMouseLook()
