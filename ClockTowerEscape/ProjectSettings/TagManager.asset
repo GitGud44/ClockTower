@@ -12,6 +12,7 @@ TagManager:
   - DroppedItemDisplay
   - Interactable
   - Candle
+  - Gear
   layers:
   - Default
   - TransparentFX
