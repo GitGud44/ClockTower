@@ -28,6 +28,21 @@ public class DesktopPlayer : MonoBehaviour
         Cursor.visible = false;
     }
     
+    public DesktopGrabbable GetHeldObject()
+    {
+        return currentlyHeld;
+    }
+
+    public void SetMoveSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
+    public void SetSensitivity(float sensitivity)
+    {
+        mouseSensitivity = sensitivity;
+    }
+
     // Call this to reset camera look direction
     public void ResetLook()
     {
