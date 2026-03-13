@@ -80,13 +80,18 @@ public class DesktopPlayer : MonoBehaviour
                 lastTarget = null;
             }
             
-            // E key: interact/click (works whether holding something or not)
-            if (target != null && Keyboard.current.eKey.wasPressedThisFrame)
+            // Click while looking at interactable (only if not holding something)
+            if (target != null && currentlyHeld == null && (Mouse.current.leftButton.wasPressedThisFrame || Keyboard.current.eKey.wasPressedThisFrame))
+            {
+                target.Click();
+            }
+            // Use/interact while holding something (E key only, to avoid conflicts with mouse release)
+            else if (target != null && currentlyHeld != null && Keyboard.current.eKey.wasPressedThisFrame)
             {
                 target.Click();
             }
 
-            // Mouse click: grab OR interact (only if not holding something)
+            // Grab: mouse pressed on a grabbable object
             if (currentlyHeld == null && Mouse.current.leftButton.wasPressedThisFrame)
             {
                 DesktopGrabbable grabbable = hit.collider.GetComponentInParent<DesktopGrabbable>();
@@ -94,10 +99,6 @@ public class DesktopPlayer : MonoBehaviour
                 {
                     grabbable.Grab(holdPoint);
                     currentlyHeld = grabbable;
-                }
-                else if (target != null)
-                {
-                    target.Click();
                 }
             }
         }
