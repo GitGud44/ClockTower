@@ -3,26 +3,27 @@ using UnityEngine.Events;
 
 public class GearPuzzleManager : MonoBehaviour
 {
-    [Header("Gear Slots (in order: slot for gear 2, slot for gear 3)")]
+
+
+    [Header("Gear Slots Place in order: slot for gear 2, slot for gear 3)")]
     public GearSlot[] emptySlots;
 
-    [Header("All gear transforms in chain order (gear1, gear2 slot, gear3 slot, gear4)")]
+    [Header("The gear transforms in the chain order: (gear1, gear2 slot, gear3 slot, gear4)")]
     public Transform[] allGears;
 
-    [Header("Spin Settings")]
     public float spinSpeed = 90f;
 
     [Header("Events")]
-    [Tooltip("Fired when all gears are connected. Wire to ElevatorController.UnlockAndOpenDoors.")]
+    [Tooltip("This is fired when all the gears are connected. Wire to ElevatorController.UnlockAndOpenDoors. to open the elevatr door")]
     public UnityEvent OnPuzzleSolved;
 
-    // How many gears in the chain are currently connected (starts at 1: gear 1 always spins)
-    private int connectedCount = 1;
-    private bool puzzleSolved = false;
+    // How many gears in the chain are currently connected (starts at 1: gear 1 because always spins)
+    int connectedCount = 1;
+    bool puzzleSolved = false;
 
     public bool IsChainConnected()
     {
-        // Full chain = all 4 gears connected
+        // full chain means all 4 gears are connected
         return connectedCount >= allGears.Length;
     }
 
@@ -51,16 +52,22 @@ public class GearPuzzleManager : MonoBehaviour
         {
             connectedCount = allGears.Length;
             puzzleSolved = true;
-            Debug.Log("Gear puzzle solved!");
+            Debug.Log("The gear puzzle is solved! Hooray!");
+
+
             OnPuzzleSolved?.Invoke();
         }
 
-        Debug.Log($"Gear chain now has {connectedCount} connected gears.");
+        Debug.Log($"Gear chain now has {connectedCount} connected gears");
     }
 
+
+// In update here spin the connected gears
+// they should alternate direction because thats how gears work in real life, to do this alternate directon based on odd or even (if its even positive clockwise
+//else negative counterclockwise
     void Update()
     {
-        // Spin connected gears, alternating direction like real meshing gears
+        
         for (int i = 0; i < connectedCount && i < allGears.Length; i++)
         {
             if (allGears[i] == null) continue;
