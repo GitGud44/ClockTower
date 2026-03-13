@@ -5,10 +5,7 @@ public class RaycastInteractable : MonoBehaviour
 {
     [Header("Highlight Settings")]
     public bool enableHighlight = true;
-    [Tooltip("If empty and highlightAllChildren is true, will auto-highlight all child renderers")]
     public GameObject[] objectsToHighlight;
-    [Tooltip("If objectsToHighlight is empty, highlight all children with renderers")]
-    public bool highlightAllChildren = false;
     public Color emissionColor = Color.white;
     [Range(0f, 2f)]
     public float emissionIntensity = 0.2f;
@@ -27,13 +24,13 @@ public class RaycastInteractable : MonoBehaviour
     {
         if (initialized) return;
         initialized = true;
-
+        
         if (objectsToHighlight != null && objectsToHighlight.Length > 0)
         {
             materials = new Material[objectsToHighlight.Length];
             originalEmissions = new Color[objectsToHighlight.Length];
             hadEmissions = new bool[objectsToHighlight.Length];
-
+            
             for (int i = 0; i < objectsToHighlight.Length; i++)
             {
                 if (objectsToHighlight[i] != null)
@@ -48,27 +45,9 @@ public class RaycastInteractable : MonoBehaviour
                 }
             }
         }
-        else if (highlightAllChildren)
-        {
-            // Highlight all child renderers
-            Renderer[] childRenderers = GetComponentsInChildren<Renderer>();
-            if (childRenderers.Length > 0)
-            {
-                materials = new Material[childRenderers.Length];
-                originalEmissions = new Color[childRenderers.Length];
-                hadEmissions = new bool[childRenderers.Length];
-
-                for (int i = 0; i < childRenderers.Length; i++)
-                {
-                    materials[i] = childRenderers[i].material;
-                    hadEmissions[i] = materials[i].IsKeywordEnabled("_EMISSION");
-                    originalEmissions[i] = materials[i].GetColor("_EmissionColor");
-                }
-            }
-        }
         else
         {
-            // Fallback: highlight just this object
+            // Fallback
             Renderer rend = GetComponent<Renderer>();
             if (rend != null)
             {
