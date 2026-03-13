@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class Bell : MonoBehaviour
@@ -21,6 +22,10 @@ public class Bell : MonoBehaviour
     public AudioSource audioSource;
     private Quaternion initialRotation;
     private Coroutine ringRoutine;
+
+    [Header("Events")]
+    [Tooltip("Fired when the full ring sequence completes. Wire to ElevatorController.UnlockAndOpenDoors.")]
+    public UnityEvent OnRingComplete;
 
     int hand_colliders_inside = 0;
 
@@ -84,6 +89,7 @@ public class Bell : MonoBehaviour
             interactable.enabled = true;
             interactable.enableHighlight = true;
         }
+        OnRingComplete?.Invoke();
     }
 
     void OnDisable()
