@@ -3,8 +3,8 @@ using UnityEngine;
 public class DesktopGrabbable : MonoBehaviour
 {
     [Header("Grab Settings")]
-    public float followSpeed = 10f; // How fast the object follows the hold point
-    public float maxSpeed = 5f;     // Maximum velocity to prevent clipping through walls
+    public float followSpeed = 25f; // How fast the object follows the hold point
+    public float maxSpeed = 15f;    // Maximum velocity to prevent clipping through walls
     public Vector3 holdOffset = Vector3.zero; // Offset from hold point for better visuals and customizable through the inspector
     
     private Rigidbody rb;
@@ -46,12 +46,19 @@ public class DesktopGrabbable : MonoBehaviour
     {
         holdPoint = newHoldPoint;
         isGrabbed = true;
-        
+
         if (rb != null)
         {
             wasKinematic = rb.isKinematic;
             rb.isKinematic = false; // Keep physics enabled for collisions
             rb.useGravity = false;  // But disable gravity while held
+
+            // Snap to hold point instantly so there's no float delay
+            Vector3 targetPos = holdPoint.position + holdPoint.TransformDirection(holdOffset);
+            rb.position = targetPos;
+            rb.rotation = holdPoint.rotation;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
     
