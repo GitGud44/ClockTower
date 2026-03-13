@@ -21,12 +21,6 @@ public class DesktopPlayer : MonoBehaviour
     private RaycastInteractable lastTarget = null;
     private DesktopGrabbable currentlyHeld = null;
 
-    // Public getter for currently held object (used by LanternInteractable to check if holding candle)
-    public DesktopGrabbable GetHeldObject()
-    {
-        return currentlyHeld;
-    }
-
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -41,16 +35,6 @@ public class DesktopPlayer : MonoBehaviour
         if (playerCamera != null)
             playerCamera.localRotation = Quaternion.identity;
     }
-    
-    public void SetMoveSpeed(float speed)
-    {
-        moveSpeed = speed;
-    }
-
-    public void SetSensitivity(float sensitivity)
-    {
-        mouseSensitivity = sensitivity;
-    }
 
     void Update()
     {
@@ -64,7 +48,7 @@ public class DesktopPlayer : MonoBehaviour
         SetHeldCollidersEnabled(true);
         if (didHit)
         {
-            RaycastInteractable target = hit.collider.GetComponentInParent<RaycastInteractable>();
+            RaycastInteractable target = hit.collider.GetComponent<RaycastInteractable>();
             
             // Started looking at a new interactable
             if (target != null && target != lastTarget)
@@ -85,16 +69,11 @@ public class DesktopPlayer : MonoBehaviour
             {
                 target.Click();
             }
-            // Use/interact while holding something (E key only, to avoid conflicts with mouse release)
-            else if (target != null && currentlyHeld != null && Keyboard.current.eKey.wasPressedThisFrame)
-            {
-                target.Click();
-            }
             
             // Grab: mouse pressed on a grabbable object
             if (currentlyHeld == null && Mouse.current.leftButton.wasPressedThisFrame)
             {
-                DesktopGrabbable grabbable = hit.collider.GetComponentInParent<DesktopGrabbable>();
+                DesktopGrabbable grabbable = hit.collider.GetComponent<DesktopGrabbable>();
                 if (grabbable != null && holdPoint != null)
                 {
                     grabbable.Grab(holdPoint);
