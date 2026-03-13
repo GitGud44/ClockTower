@@ -9,12 +9,12 @@ public class RaycastInteractable : MonoBehaviour
     public Color emissionColor = Color.white;
     [Range(0f, 2f)]
     public float emissionIntensity = 0.2f;
-    
+
     [Header("Events")]
     public UnityEvent OnGazeEnter;
     public UnityEvent OnGazeExit;
     public UnityEvent OnClick;
-    
+
     private Material[] materials;
     private Color[] originalEmissions;
     private bool[] hadEmissions;

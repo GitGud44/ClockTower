@@ -90,7 +90,7 @@ public class DesktopPlayer : MonoBehaviour
             {
                 target.Click();
             }
-
+            
             // Grab: mouse pressed on a grabbable object
             if (currentlyHeld == null && Mouse.current.leftButton.wasPressedThisFrame)
             {
