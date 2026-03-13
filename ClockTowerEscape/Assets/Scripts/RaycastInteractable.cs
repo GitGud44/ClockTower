@@ -5,7 +5,7 @@ public class RaycastInteractable : MonoBehaviour
 {
     [Header("Highlight Settings")]
     public bool enableHighlight = true;
-    public GameObject[] objectsToHighlight;
+    public GameObject[] objectsToHighlight; // kept for backwards compatibility
     public Color emissionColor = Color.white;
     [Range(0f, 2f)]
     public float emissionIntensity = 0.2f;
@@ -24,40 +24,25 @@ public class RaycastInteractable : MonoBehaviour
     {
         if (initialized) return;
         initialized = true;
-        
-        if (objectsToHighlight != null && objectsToHighlight.Length > 0)
+
+        // Always grab all renderers on this object and its children
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0)
         {
-            materials = new Material[objectsToHighlight.Length];
-            originalEmissions = new Color[objectsToHighlight.Length];
-            hadEmissions = new bool[objectsToHighlight.Length];
-            
-            for (int i = 0; i < objectsToHighlight.Length; i++)
-            {
-                if (objectsToHighlight[i] != null)
-                {
-                    Renderer rend = objectsToHighlight[i].GetComponent<Renderer>();
-                    if (rend != null)
-                    {
-                        materials[i] = rend.material;
-                        hadEmissions[i] = materials[i].IsKeywordEnabled("_EMISSION");
-                        originalEmissions[i] = materials[i].GetColor("_EmissionColor");
-                    }
-                }
-            }
+            Renderer self = GetComponent<Renderer>();
+            if (self != null) renderers = new Renderer[] { self };
         }
-        else
+        if (renderers.Length == 0) return;
+
+        materials = new Material[renderers.Length];
+        originalEmissions = new Color[renderers.Length];
+        hadEmissions = new bool[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
         {
-            // Fallback
-            Renderer rend = GetComponent<Renderer>();
-            if (rend != null)
-            {
-                materials = new Material[1];
-                originalEmissions = new Color[1];
-                hadEmissions = new bool[1];
-                materials[0] = rend.material;
-                hadEmissions[0] = materials[0].IsKeywordEnabled("_EMISSION");
-                originalEmissions[0] = materials[0].GetColor("_EmissionColor");
-            }
+            materials[i] = renderers[i].material;
+            hadEmissions[i] = materials[i].IsKeywordEnabled("_EMISSION");
+            originalEmissions[i] = materials[i].GetColor("_EmissionColor");
         }
     }
 

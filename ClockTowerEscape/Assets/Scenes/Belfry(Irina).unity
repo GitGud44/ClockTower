@@ -1259,7 +1259,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 0
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -2822,7 +2821,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 0
   emissionColor: {r: 1, g: 0.8195425, b: 0.13679248, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -3357,7 +3355,7 @@ MonoBehaviour:
   gravity: -9.81
   mouseSensitivity: 15
   playerCamera: {fileID: 874565412}
-  interactionRange: 10
+  interactionRange: 3
   holdPoint: {fileID: 1092805953}
 --- !u!23 &1836872435
 MeshRenderer:
@@ -4071,6 +4069,14 @@ PrefabInstance:
     - target: {fileID: 5081280157850847705, guid: d20dffb9adf954a5eacab242ad87eef8, type: 3}
       propertyPath: m_Name
       value: BellDisplay
+      objectReference: {fileID: 0}
+    - target: {fileID: 6054973788057766473, guid: d20dffb9adf954a5eacab242ad87eef8, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7747648557238907013, guid: d20dffb9adf954a5eacab242ad87eef8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8566541296439185246, guid: d20dffb9adf954a5eacab242ad87eef8, type: 3}
       propertyPath: m_LocalScale.x
