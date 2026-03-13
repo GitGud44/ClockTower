@@ -9605,7 +9605,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -10649,7 +10648,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -16559,7 +16557,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -22919,7 +22916,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -28813,7 +28809,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 228508901521010452, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: nextSceneName
-      value: Belfry(Irina)
+      value: ClockRoom_Nico
       objectReference: {fileID: 0}
     - target: {fileID: 1939201566320388960, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: m_LocalScale.x
@@ -29279,7 +29275,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -31495,7 +31490,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -42120,7 +42114,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -50756,7 +50749,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -53161,7 +53153,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -53250,7 +53241,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -54535,7 +54525,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -54892,7 +54881,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -55557,7 +55545,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -55886,7 +55873,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 1
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
@@ -56163,7 +56149,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableHighlight: 1
   objectsToHighlight: []
-  highlightAllChildren: 0
   emissionColor: {r: 1, g: 1, b: 1, a: 1}
   emissionIntensity: 0.2
   OnGazeEnter:
