@@ -7,8 +7,6 @@ public class MainMenu : MonoBehaviour
     public GameObject accessibilityMenuPanel;
     public Slider sfxVolumeSlider;
     public Slider musicVolumeSlider;
-    public AudioSource sfxAudioSource;
-    public AudioSource musicAudioSource;
     
     private MenuToggle menuToggle;
 
@@ -17,8 +15,8 @@ public class MainMenu : MonoBehaviour
         menuToggle = FindFirstObjectByType<MenuToggle>();
         
         // Load saved volumes or set defaults
-        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 50f);
-        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 50f);
+        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
+        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
         
         if (sfxVolumeSlider != null)
         {
@@ -53,20 +51,18 @@ public class MainMenu : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
-        if (sfxAudioSource != null)
-        {
-            sfxAudioSource.volume = volume;
-        }
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetSFXVolume(volume);
+
         PlayerPrefs.SetFloat("SFXVolume", volume);
         PlayerPrefs.Save();
     }
 
     public void SetMusicVolume(float volume)
     {
-        if (musicAudioSource != null)
-        {
-            musicAudioSource.volume = volume;
-        }
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMusicVolume(volume);
+
         PlayerPrefs.SetFloat("MusicVolume", volume);
         PlayerPrefs.Save();
     }

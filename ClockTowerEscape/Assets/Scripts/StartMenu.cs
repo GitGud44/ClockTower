@@ -5,6 +5,13 @@ using UnityEngine.UI;
 
 public class StartMenu : MonoBehaviour
 {
+    private const string SfxVolumeKey = "SFXVolume";
+    private const string MusicVolumeKey = "MusicVolume";
+    private const string PlayerSpeedKey = "PlayerSpeed";
+    private const string MouseSensitivityKey = "MouseSensitivity";
+    private const string LocomotionModeKey = "LocomotionMode"; // 0 = Move, 1 = Teleport
+    private const string TurnModeKey = "TurnMode"; // 0 = Snap, 1 = Continuous
+
     public GameObject mainPanel;
     public GameObject settingsPanel;
 
@@ -13,8 +20,6 @@ public class StartMenu : MonoBehaviour
 
     public Slider sfxVolumeSlider;
     public Slider musicVolumeSlider;
-    public AudioSource sfxAudioSource;
-    public AudioSource musicAudioSource;
 
     public GameObject teleport;
     public GameObject move;
@@ -45,8 +50,8 @@ public class StartMenu : MonoBehaviour
 
     private void LoadVolumeSettings()
     {
-        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
-        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+        float sfxVolume = PlayerPrefs.GetFloat(SfxVolumeKey, 0.5f);
+        float musicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, 0.5f);
 
         if (sfxVolumeSlider != null)
         {
@@ -77,19 +82,20 @@ public class StartMenu : MonoBehaviour
         if (continuousTurnToggle != null)
             continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
 
-        if (moveToggle != null) moveToggle.isOn = true;
-        if (move != null) move.SetActive(true);
-        if (teleportToggle != null) teleportToggle.isOn = false;
-        if (teleport != null) teleport.SetActive(false);
+        bool useTeleport = PlayerPrefs.GetInt(LocomotionModeKey, 0) == 1;
+        bool useContinuousTurn = PlayerPrefs.GetInt(TurnModeKey, 0) == 1;
 
-        float savedSpeed = PlayerPrefs.GetFloat("PlayerSpeed", 5f);
+        ApplyLocomotionMode(useTeleport, false);
+        ApplyTurnMode(useContinuousTurn, false);
+
+        float savedSpeed = PlayerPrefs.GetFloat(PlayerSpeedKey, 5f);
         if (speedSlider != null)
         {
             speedSlider.value = savedSpeed;
             speedSlider.onValueChanged.AddListener(SetPlayerSpeed);
         }
 
-        float savedSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 2f);
+        float savedSensitivity = PlayerPrefs.GetFloat(MouseSensitivityKey, 2f);
         if (sensitivitySlider != null)
         {
             sensitivitySlider.value = savedSensitivity;
@@ -126,88 +132,86 @@ public class StartMenu : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
-        if (sfxAudioSource != null)
-            sfxAudioSource.volume = volume;
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetSFXVolume(volume);
         
-        PlayerPrefs.SetFloat("SFXVolume", volume);
+        PlayerPrefs.SetFloat(SfxVolumeKey, volume);
         PlayerPrefs.Save();
     }
 
     public void SetMusicVolume(float volume)
     {
-        if (musicAudioSource != null)
-            musicAudioSource.volume = volume;
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMusicVolume(volume);
         
-        PlayerPrefs.SetFloat("MusicVolume", volume);
+        PlayerPrefs.SetFloat(MusicVolumeKey, volume);
         PlayerPrefs.Save();
+    }
+
+    private void ApplyLocomotionMode(bool useTeleport, bool save)
+    {
+        if (teleportToggle != null) teleportToggle.SetIsOnWithoutNotify(useTeleport);
+        if (moveToggle != null) moveToggle.SetIsOnWithoutNotify(!useTeleport);
+
+        if (teleport != null) teleport.SetActive(useTeleport);
+        if (move != null) move.SetActive(!useTeleport);
+
+        if (save)
+        {
+            PlayerPrefs.SetInt(LocomotionModeKey, useTeleport ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private void ApplyTurnMode(bool useContinuousTurn, bool save)
+    {
+        if (continuousTurnToggle != null) continuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
+        if (snapTurnToggle != null) snapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
+
+        if (continuousTurn != null) continuousTurn.SetActive(useContinuousTurn);
+        if (snapTurn != null) snapTurn.SetActive(!useContinuousTurn);
+
+        if (save)
+        {
+            PlayerPrefs.SetInt(TurnModeKey, useContinuousTurn ? 1 : 0);
+            PlayerPrefs.Save();
+        }
     }
 
 
     void OnTeleportToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (moveToggle != null) moveToggle.isOn = false;
-            if (teleport != null) teleport.SetActive(true);
-            if (move != null) move.SetActive(false);
-        }
-        else
-        {
-            if (teleport != null) teleport.SetActive(false);
-        }
+            ApplyLocomotionMode(true, true);
     }
 
     void OnMoveToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (teleportToggle != null) teleportToggle.isOn = false;
-            if (move != null) move.SetActive(true);
-            if (teleport != null) teleport.SetActive(false);
-        }
-        else
-        {
-            if (move != null) move.SetActive(false);
-        }
+            ApplyLocomotionMode(false, true);
     }
 
     void OnSnapTurnToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (continuousTurnToggle != null) continuousTurnToggle.isOn = false;
-            if (snapTurn != null) snapTurn.SetActive(true);
-            if (continuousTurn != null) continuousTurn.SetActive(false);
-        }
-        else
-        {
-            if (snapTurn != null) snapTurn.SetActive(false);
-        }
+            ApplyTurnMode(false, true);
     }
 
     void OnContinuousTurnToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (snapTurnToggle != null) snapTurnToggle.isOn = false;
-            if (continuousTurn != null) continuousTurn.SetActive(true);
-            if (snapTurn != null) snapTurn.SetActive(false);
-        }
-        else
-        {
-            if (continuousTurn != null) continuousTurn.SetActive(false);
-        }
+            ApplyTurnMode(true, true);
     }
 
     public void SetPlayerSpeed(float speed)
     {
-        PlayerPrefs.SetFloat("PlayerSpeed", speed);
+        PlayerPrefs.SetFloat(PlayerSpeedKey, speed);
         PlayerPrefs.Save();
     }
 
     public void SetMouseSensitivity(float sensitivity)
     {
-        PlayerPrefs.SetFloat("MouseSensitivity", sensitivity);
+        PlayerPrefs.SetFloat(MouseSensitivityKey, sensitivity);
         PlayerPrefs.Save();
     }
 

@@ -21,6 +21,9 @@ public class AccessibilityMenu : MonoBehaviour
 
     private DesktopPlayer desktopPlayer;
 
+    private const string LocomotionModeKey = "LocomotionMode"; // 0 = Move, 1 = Teleport
+    private const string TurnModeKey = "TurnMode"; // 0 = Snap, 1 = Continuous
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,14 +32,10 @@ public class AccessibilityMenu : MonoBehaviour
         if (snapTurnToggle != null) snapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
         if (continuousTurnToggle != null) continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
 
-        if (moveToggle != null) moveToggle.isOn = true;
-        if (move != null) move.SetActive(true);
-        if (teleportToggle != null) teleportToggle.isOn = false;
-        if (teleport != null) teleport.SetActive(false);
-        if (teleportInteractor != null)
-        {
-            teleportInteractor.enabled = false;
-        }
+        bool useTeleport = PlayerPrefs.GetInt(LocomotionModeKey, 0) == 1;
+        bool useContinuousTurn = PlayerPrefs.GetInt(TurnModeKey, 0) == 1;
+        ApplyLocomotionMode(useTeleport, false);
+        ApplyTurnMode(useContinuousTurn, false);
 
         desktopPlayer = FindFirstObjectByType<DesktopPlayer>();
         if (speedSlider != null)
@@ -66,68 +65,61 @@ public class AccessibilityMenu : MonoBehaviour
         accessibilityMenuPanel.SetActive(false);
     }
 
+    private void ApplyLocomotionMode(bool useTeleport, bool save)
+    {
+        if (teleportToggle != null) teleportToggle.SetIsOnWithoutNotify(useTeleport);
+        if (moveToggle != null) moveToggle.SetIsOnWithoutNotify(!useTeleport);
+
+        if (teleport != null) teleport.SetActive(useTeleport);
+        if (move != null) move.SetActive(!useTeleport);
+
+        if (teleportInteractor != null)
+            teleportInteractor.enabled = useTeleport;
+
+        if (save)
+        {
+            PlayerPrefs.SetInt(LocomotionModeKey, useTeleport ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private void ApplyTurnMode(bool useContinuousTurn, bool save)
+    {
+        if (continuousTurnToggle != null) continuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
+        if (snapTurnToggle != null) snapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
+
+        if (continuousTurn != null) continuousTurn.SetActive(useContinuousTurn);
+        if (snapTurn != null) snapTurn.SetActive(!useContinuousTurn);
+
+        if (save)
+        {
+            PlayerPrefs.SetInt(TurnModeKey, useContinuousTurn ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+    }
+
     void OnTeleportToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (moveToggle != null) moveToggle.isOn = false;
-            if (teleport != null) teleport.SetActive(true);
-            if (move != null) move.SetActive(false);
-            if (teleportInteractor != null)
-            {
-                teleportInteractor.enabled = true;
-            }
-        }
-        else
-        {
-            if (teleport != null) teleport.SetActive(false);
-            if (teleportInteractor != null)
-            {
-                teleportInteractor.enabled = false;
-            }
-        }
+            ApplyLocomotionMode(true, true);
     }
 
     void OnMoveToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (teleportToggle != null) teleportToggle.isOn = false;
-            if (move != null) move.SetActive(true);
-            if (teleport != null) teleport.SetActive(false);
-        }
-        else
-        {
-            if (move != null) move.SetActive(false);
-        }
+            ApplyLocomotionMode(false, true);
     }
 
     void OnSnapTurnToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (continuousTurnToggle != null) continuousTurnToggle.isOn = false;
-            if (snapTurn != null) snapTurn.SetActive(true);
-            if (continuousTurn != null) continuousTurn.SetActive(false);
-        }
-        else
-        {
-            if (snapTurn != null) snapTurn.SetActive(false);
-        }
+            ApplyTurnMode(false, true);
     }
 
     void OnContinuousTurnToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (snapTurnToggle != null) snapTurnToggle.isOn = false;
-            if (continuousTurn != null) continuousTurn.SetActive(true);
-            if (snapTurn != null) snapTurn.SetActive(false);
-        }
-        else
-        {
-            if (continuousTurn != null) continuousTurn.SetActive(false);
-        }
+            ApplyTurnMode(true, true);
     }
 
     void OnSpeedChanged(float speed)
