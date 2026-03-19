@@ -112,8 +112,23 @@ public class DesktopPlayer : MonoBehaviour
         // Release: mouse released while holding something
         if (currentlyHeld != null && Mouse.current.leftButton.wasReleasedThisFrame)
         {
-            currentlyHeld.Release();
-            currentlyHeld = null;
+            // if aiming at a gear slot, try to place the gear there instead of dropping it
+            bool placed = false;
+            if (didHit)
+            {
+                GearSlot slot = hit.collider.GetComponentInParent<GearSlot>();
+                if (slot != null)
+                {
+                    slot.TryPlaceGear(this);
+                    placed = slot.isFilled;
+                }
+            }
+
+            if (!placed)
+            {
+                currentlyHeld.Release();
+                currentlyHeld = null;
+            }
         }
     }
 

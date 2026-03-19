@@ -1,76 +1,69 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+/*
+This is gear puzzle manager: it controls the gear chain on the wall in the clock room
+Idea is theres a gear thats always spinning and another one that is stuck. The goal is to get the
+stuck one moving to trigger the elevator door to open. This is done by grabbing gears off the ground
+and placing them on pegs on the wall beside the spinning gear.
+Once the chain is all connected it moves the stuck gear to trigger the elevator door to open.
+
+The allGears array is set up in the inspector like this [driveGear, slot1, slot2, ....etc. endGear]
+The middle ones start as null and get filled when OnGearPlaced is called
+*/
 public class GearPuzzleManager : MonoBehaviour
 {
-
-
-    [Header("Gear Slots Place in order: slot for gear 2, slot for gear 3)")]
-    public GearSlot[] emptySlots;
-
-    [Header("The gear transforms in the chain order: (gear1, gear2 slot, gear3 slot, gear4)")]
+    public GearSlot[] slots;
     public Transform[] allGears;
-
     public float spinSpeed = 90f;
-
-    [Header("Events")]
-    [Tooltip("This is fired when all the gears are connected. Wire to ElevatorController.UnlockAndOpenDoors. to open the elevatr door")]
+    // public float spinSpeed = 45f;  // this was too slow
     public UnityEvent OnPuzzleSolved;
 
-    // How many gears in the chain are currently connected (starts at 1: gear 1 because always spins)
     int connectedCount = 1;
     bool puzzleSolved = false;
 
-    public bool IsChainConnected()
-    {
-        // full chain means all 4 gears are connected
-        return connectedCount >= allGears.Length;
-    }
-
+    // This is called by GearSlot when a gear gets placed
     public void OnGearPlaced(GearSlot slot)
     {
-        // Update the snapped gear reference
-        for (int i = 0; i < emptySlots.Length; i++)
+        // Figure out which of the slots this is and then stick the gear transform into allGears
+        for (int i = 0; i < slots.Length; i++)
         {
-            if (emptySlots[i] == slot && slot.snappedGear != null)
+            if (slots[i] == slot && slot.snappedGear != null)
             {
                 allGears[i + 1] = slot.snappedGear;
                 break;
             }
         }
 
-        // Count consecutive filled slots from gear 1
-        connectedCount = 1; // Gear 1 always connected
-        for (int i = 0; i < emptySlots.Length; i++)
+        // I recount the connected gears from the start here
+        connectedCount = 1;
+        for (int i = 0; i < slots.Length; i++)
         {
-            if (!emptySlots[i].isFilled) break;
-            connectedCount = i + 2; // +1 for gear1, +1 for this slot
+            if (!slots[i].isFilled) break;
+            connectedCount = i + 2; // +1 for drive gear, +1 for this slot
         }
 
-        // If all slots filled, the chain reaches the end gear too
-        if (connectedCount > emptySlots.Length)
+        // if all the slots are filled then the chain goes all the way to the end gear
+        if (connectedCount > slots.Length)
         {
             connectedCount = allGears.Length;
             puzzleSolved = true;
-            Debug.Log("The gear puzzle is solved! Hooray!");
-
-
+            Debug.Log("Gear puzzle solved!");
             OnPuzzleSolved?.Invoke();
         }
 
-        Debug.Log($"Gear chain now has {connectedCount} connected gears");
+        Debug.Log($"Chain has {connectedCount} connected gears");
     }
 
 
-// In update here spin the connected gears
-// they should alternate direction because thats how gears work in real life, to do this alternate directon based on odd or even (if its even positive clockwise
-//else negative counterclockwise
     void Update()
     {
-        
+        // here I spin each of the connected gears, and I alternate the direction because
+        // thats how real gears work. even index = clockwise, odd = counter clockwise
         for (int i = 0; i < connectedCount && i < allGears.Length; i++)
         {
             if (allGears[i] == null) continue;
+            // Vector3.forward didnt work, Vector3.right was wrong too
             float dir = (i % 2 == 0) ? 1f : -1f;
             allGears[i].Rotate(Vector3.up * spinSpeed * dir * Time.deltaTime);
         }
