@@ -13,6 +13,9 @@ public class GameModeMenu : MonoBehaviour
     public GameObject desktopPlayerPrefab;
     public GameObject vrPlayerPrefab;
 
+    [Header("Cameras")]
+    public Camera menuCamera;
+
     public void StartDesktopMode()
     {
         // Set the game mode in GameManager
@@ -25,6 +28,18 @@ public class GameModeMenu : MonoBehaviour
         // Enable desktop player controls
         if (desktopPlayerPrefab != null) desktopPlayerPrefab.SetActive(true);
         if (vrPlayerPrefab != null) vrPlayerPrefab.SetActive(false);
+
+        // Mark desktop player as persistent across scenes
+        if (desktopPlayerPrefab != null)
+            DontDestroyOnLoad(desktopPlayerPrefab);
+
+        // Keep desktop input off during menu navigation so cursor stays free
+        var desktopController = desktopPlayerPrefab != null ? desktopPlayerPrefab.GetComponent<DesktopPlayer>() : null;
+        if (desktopController != null) desktopController.enabled = false;
+
+        // Enable cursor for desktop menu navigation
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         // Hide mode menu
         HideModeMenu();
@@ -43,6 +58,14 @@ public class GameModeMenu : MonoBehaviour
         if (vrPlayerPrefab != null) vrPlayerPrefab.SetActive(true);
         if (desktopPlayerPrefab != null) desktopPlayerPrefab.SetActive(false);
 
+        // Mark VR player as persistent across scenes
+        if (vrPlayerPrefab != null)
+            DontDestroyOnLoad(vrPlayerPrefab);
+
+        // Hide cursor for VR mode
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         // Hide mode menu
         HideModeMenu();
     }
@@ -50,11 +73,16 @@ public class GameModeMenu : MonoBehaviour
     private void HideModeMenu()
     {
         if (modeMenuPanel != null) modeMenuPanel.SetActive(false);
+        if (menuCamera != null) menuCamera.gameObject.SetActive(false);
     }
     
     public void QuitGame()
     {
-        Application.Quit();
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
 

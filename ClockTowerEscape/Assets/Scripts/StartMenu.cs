@@ -5,13 +5,6 @@ using UnityEngine.UI;
 
 public class StartMenu : MonoBehaviour
 {
-    private const string SfxVolumeKey = "SFXVolume";
-    private const string MusicVolumeKey = "MusicVolume";
-    private const string PlayerSpeedKey = "PlayerSpeed";
-    private const string MouseSensitivityKey = "MouseSensitivity";
-    private const string LocomotionModeKey = "LocomotionMode"; // 0 = Move, 1 = Teleport
-    private const string TurnModeKey = "TurnMode"; // 0 = Snap, 1 = Continuous
-
     public GameObject mainPanel;
     public GameObject settingsPanel;
 
@@ -34,6 +27,20 @@ public class StartMenu : MonoBehaviour
 
     private bool isTransitioning = false;
 
+    void Update()
+    {
+        if (isTransitioning) return;
+
+        bool shouldKeepCursorUnlocked = GameManager.Instance == null ||
+                                        GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.Desktop;
+
+        if (shouldKeepCursorUnlocked)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
+
     void Start()
     {
         Cursor.visible = true;
@@ -50,8 +57,8 @@ public class StartMenu : MonoBehaviour
 
     private void LoadVolumeSettings()
     {
-        float sfxVolume = PlayerPrefs.GetFloat(SfxVolumeKey, 0.5f);
-        float musicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, 0.5f);
+        float sfxVolume = PlayerPrefs.GetFloat(SettingsKeys.SfxVolume, 0.5f);
+        float musicVolume = PlayerPrefs.GetFloat(SettingsKeys.MusicVolume, 0.5f);
 
         if (sfxVolumeSlider != null)
         {
@@ -82,20 +89,20 @@ public class StartMenu : MonoBehaviour
         if (continuousTurnToggle != null)
             continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
 
-        bool useTeleport = PlayerPrefs.GetInt(LocomotionModeKey, 0) == 1;
-        bool useContinuousTurn = PlayerPrefs.GetInt(TurnModeKey, 0) == 1;
+        bool useTeleport = PlayerPrefs.GetInt(SettingsKeys.LocomotionMode, 0) == 1;
+        bool useContinuousTurn = PlayerPrefs.GetInt(SettingsKeys.TurnMode, 0) == 1;
 
         ApplyLocomotionMode(useTeleport, false);
         ApplyTurnMode(useContinuousTurn, false);
 
-        float savedSpeed = PlayerPrefs.GetFloat(PlayerSpeedKey, 5f);
+        float savedSpeed = PlayerPrefs.GetFloat(SettingsKeys.PlayerSpeed, 5f);
         if (speedSlider != null)
         {
             speedSlider.value = savedSpeed;
             speedSlider.onValueChanged.AddListener(SetPlayerSpeed);
         }
 
-        float savedSensitivity = PlayerPrefs.GetFloat(MouseSensitivityKey, 2f);
+        float savedSensitivity = PlayerPrefs.GetFloat(SettingsKeys.MouseSensitivity, 2f);
         if (sensitivitySlider != null)
         {
             sensitivitySlider.value = savedSensitivity;
@@ -107,6 +114,22 @@ public class StartMenu : MonoBehaviour
     {
         if (isTransitioning) return;
         isTransitioning = true;
+
+        // Lock and hide cursor when leaving the menu
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        // If Desktop mode was chosen, turn on the DesktopPlayer script now
+        if (GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.Desktop)
+        {
+            // Older Unity versions use the bool overload for includeInactive
+            var desktopController = FindObjectOfType<DesktopPlayer>(true);
+            if (desktopController != null && desktopController.enabled == false)
+            {
+                desktopController.enabled = true;
+            }
+        }
+
         StartCoroutine(StartGameWithFade());
     }
 
@@ -135,7 +158,7 @@ public class StartMenu : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.SetSFXVolume(volume);
         
-        PlayerPrefs.SetFloat(SfxVolumeKey, volume);
+        PlayerPrefs.SetFloat(SettingsKeys.SfxVolume, volume);
         PlayerPrefs.Save();
     }
 
@@ -144,7 +167,7 @@ public class StartMenu : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.SetMusicVolume(volume);
         
-        PlayerPrefs.SetFloat(MusicVolumeKey, volume);
+        PlayerPrefs.SetFloat(SettingsKeys.MusicVolume, volume);
         PlayerPrefs.Save();
     }
 
@@ -158,7 +181,7 @@ public class StartMenu : MonoBehaviour
 
         if (save)
         {
-            PlayerPrefs.SetInt(LocomotionModeKey, useTeleport ? 1 : 0);
+            PlayerPrefs.SetInt(SettingsKeys.LocomotionMode, useTeleport ? 1 : 0);
             PlayerPrefs.Save();
         }
     }
@@ -173,7 +196,7 @@ public class StartMenu : MonoBehaviour
 
         if (save)
         {
-            PlayerPrefs.SetInt(TurnModeKey, useContinuousTurn ? 1 : 0);
+            PlayerPrefs.SetInt(SettingsKeys.TurnMode, useContinuousTurn ? 1 : 0);
             PlayerPrefs.Save();
         }
     }
@@ -205,13 +228,13 @@ public class StartMenu : MonoBehaviour
 
     public void SetPlayerSpeed(float speed)
     {
-        PlayerPrefs.SetFloat(PlayerSpeedKey, speed);
+        PlayerPrefs.SetFloat(SettingsKeys.PlayerSpeed, speed);
         PlayerPrefs.Save();
     }
 
     public void SetMouseSensitivity(float sensitivity)
     {
-        PlayerPrefs.SetFloat(MouseSensitivityKey, sensitivity);
+        PlayerPrefs.SetFloat(SettingsKeys.MouseSensitivity, sensitivity);
         PlayerPrefs.Save();
     }
 
@@ -223,7 +246,9 @@ public class StartMenu : MonoBehaviour
             yield return StartCoroutine(fm.FadeOut(fadeOutDuration));
 
         if (GameManager.Instance != null)
+        {
             DontDestroyOnLoad(GameManager.Instance.gameObject);
+        }
 
         SceneManager.LoadScene(firstSceneName);
     }

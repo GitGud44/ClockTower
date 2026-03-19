@@ -21,9 +21,6 @@ public class AccessibilityMenu : MonoBehaviour
 
     private DesktopPlayer desktopPlayer;
 
-    private const string LocomotionModeKey = "LocomotionMode"; // 0 = Move, 1 = Teleport
-    private const string TurnModeKey = "TurnMode"; // 0 = Snap, 1 = Continuous
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,22 +29,22 @@ public class AccessibilityMenu : MonoBehaviour
         if (snapTurnToggle != null) snapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
         if (continuousTurnToggle != null) continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
 
-        bool useTeleport = PlayerPrefs.GetInt(LocomotionModeKey, 0) == 1;
-        bool useContinuousTurn = PlayerPrefs.GetInt(TurnModeKey, 0) == 1;
+        bool useTeleport = PlayerPrefs.GetInt(SettingsKeys.LocomotionMode, 0) == 1;
+        bool useContinuousTurn = PlayerPrefs.GetInt(SettingsKeys.TurnMode, 0) == 1;
         ApplyLocomotionMode(useTeleport, false);
         ApplyTurnMode(useContinuousTurn, false);
 
         desktopPlayer = FindFirstObjectByType<DesktopPlayer>();
         if (speedSlider != null)
         {
-            float savedSpeed = PlayerPrefs.GetFloat("PlayerSpeed", 5f);
+            float savedSpeed = PlayerPrefs.GetFloat(SettingsKeys.PlayerSpeed, 5f);
             speedSlider.value = savedSpeed;
             speedSlider.onValueChanged.AddListener(OnSpeedChanged);
             OnSpeedChanged(savedSpeed);
         }
         if (sensitivitySlider != null)
         {
-            float savedSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 2f);
+            float savedSensitivity = PlayerPrefs.GetFloat(SettingsKeys.MouseSensitivity, 2f);
             sensitivitySlider.value = savedSensitivity;
             sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
             OnSensitivityChanged(savedSensitivity);
@@ -78,7 +75,7 @@ public class AccessibilityMenu : MonoBehaviour
 
         if (save)
         {
-            PlayerPrefs.SetInt(LocomotionModeKey, useTeleport ? 1 : 0);
+            PlayerPrefs.SetInt(SettingsKeys.LocomotionMode, useTeleport ? 1 : 0);
             PlayerPrefs.Save();
         }
     }
@@ -93,7 +90,7 @@ public class AccessibilityMenu : MonoBehaviour
 
         if (save)
         {
-            PlayerPrefs.SetInt(TurnModeKey, useContinuousTurn ? 1 : 0);
+            PlayerPrefs.SetInt(SettingsKeys.TurnMode, useContinuousTurn ? 1 : 0);
             PlayerPrefs.Save();
         }
     }

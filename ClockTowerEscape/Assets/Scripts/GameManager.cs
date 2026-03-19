@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,34 +19,79 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    public void SetDesktopMode()
+    void OnDestroy()
     {
-        CurrentPlayMode = PlayMode.Desktop;
+        if (Instance == this)
+            SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    public void SetVRMode()
-    {
-        CurrentPlayMode = PlayMode.VR;
-    }
-
-    public bool isDesktopMode()
-    {
-        return CurrentPlayMode == PlayMode.Desktop;
-    }
-
-    public bool isVRMode()
-    {
-        return CurrentPlayMode == PlayMode.VR;
-    }
-
-    /// <summary>
-    /// Sets the game mode (Desktop or VR)
-    /// </summary>
     public void SetGameMode(PlayMode mode)
     {
         CurrentPlayMode = mode;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        StartCoroutine(RepositionPlayerAfterSceneLoad(scene));
+    }
+
+    private IEnumerator RepositionPlayerAfterSceneLoad(Scene loadedScene)
+    {
+        yield return null;
+
+        GameObject activePlayer = GetActivePlayerObject();
+        if (activePlayer == null)
+        {
+            Debug.LogWarning("[GameManager] No active player found after scene load.");
+            yield break;
+        }
+
+        Transform spawnPoint = FindSpawnTransformInScene(loadedScene);
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning($"[GameManager] No spawn point found in scene '{loadedScene.name}'. Use tag 'Respawn' or name 'SpawnPoint'.");
+            yield break;
+        }
+
+        CharacterController characterController = activePlayer.GetComponent<CharacterController>();
+        if (characterController != null)
+            characterController.enabled = false;
+
+        activePlayer.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+
+        if (characterController != null)
+        {
+            characterController.enabled = true;
+            characterController.Move(Vector3.zero);
+        }
+
+        DesktopPlayer desktopPlayer = activePlayer.GetComponent<DesktopPlayer>();
+        if (desktopPlayer != null)
+            desktopPlayer.ResetLook();
+
+        Debug.Log($"[GameManager] Repositioned player '{activePlayer.name}' to spawn '{spawnPoint.name}' in scene '{loadedScene.name}'.");
+    }
+
+    private GameObject GetActivePlayerObject()
+    {
+        if (CurrentPlayMode == PlayMode.Desktop)
+        {
+            DesktopPlayer[] desktopPlayers = FindObjectsOfType<DesktopPlayer>(true);
+            for (int index = 0; index < desktopPlayers.Length; index++)
+            {
+                DesktopPlayer candidate = desktopPlayers[index];
+                if (candidate.gameObject.scene.name == "DontDestroyOnLoad")
+                    return candidate.gameObject;
+            }
+
+            if (desktopPlayers.Length > 0)
+                return desktopPlayers[0].gameObject;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -105,6 +152,57 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("AudioManager instance not found!");
         }
+    }
+
+    private Transform FindSpawnTransformInScene(Scene scene)
+    {
+        GameObject[] rootObjects = scene.GetRootGameObjects();
+
+        for (int index = 0; index < rootObjects.Length; index++)
+        {
+            Transform taggedSpawn = FindChildByTag(rootObjects[index].transform, "Respawn");
+            if (taggedSpawn != null)
+                return taggedSpawn;
+        }
+
+        for (int index = 0; index < rootObjects.Length; index++)
+        {
+            Transform namedSpawn = FindChildByName(rootObjects[index].transform, "SpawnPoint");
+            if (namedSpawn != null)
+                return namedSpawn;
+        }
+
+        return null;
+    }
+
+    private Transform FindChildByTag(Transform root, string tag)
+    {
+        if (root.CompareTag(tag))
+            return root;
+
+        for (int index = 0; index < root.childCount; index++)
+        {
+            Transform match = FindChildByTag(root.GetChild(index), tag);
+            if (match != null)
+                return match;
+        }
+
+        return null;
+    }
+
+    private Transform FindChildByName(Transform root, string objectName)
+    {
+        if (root.name == objectName)
+            return root;
+
+        for (int index = 0; index < root.childCount; index++)
+        {
+            Transform match = FindChildByName(root.GetChild(index), objectName);
+            if (match != null)
+                return match;
+        }
+
+        return null;
     }
 
     // void Update()

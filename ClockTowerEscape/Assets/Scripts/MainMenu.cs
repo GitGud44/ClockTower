@@ -15,8 +15,8 @@ public class MainMenu : MonoBehaviour
         menuToggle = FindFirstObjectByType<MenuToggle>();
         
         // Load saved volumes or set defaults
-        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
-        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+        float sfxVolume = PlayerPrefs.GetFloat(SettingsKeys.SfxVolume, 0.5f);
+        float musicVolume = PlayerPrefs.GetFloat(SettingsKeys.MusicVolume, 0.5f);
         
         if (sfxVolumeSlider != null)
         {
@@ -54,7 +54,7 @@ public class MainMenu : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.SetSFXVolume(volume);
 
-        PlayerPrefs.SetFloat("SFXVolume", volume);
+        PlayerPrefs.SetFloat(SettingsKeys.SfxVolume, volume);
         PlayerPrefs.Save();
     }
 
@@ -63,7 +63,7 @@ public class MainMenu : MonoBehaviour
         if (AudioManager.Instance != null)
             AudioManager.Instance.SetMusicVolume(volume);
 
-        PlayerPrefs.SetFloat("MusicVolume", volume);
+        PlayerPrefs.SetFloat(SettingsKeys.MusicVolume, volume);
         PlayerPrefs.Save();
     }
 
