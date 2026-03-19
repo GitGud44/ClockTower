@@ -3,34 +3,50 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    public GameObject mainMenuPanel;
-    public GameObject accessibilityMenuPanel;
     public Slider sfxVolumeSlider;
     public Slider musicVolumeSlider;
     
     private MenuToggle menuToggle;
+    private bool listenersRegistered = false;
 
     void Start()
     {
         menuToggle = FindFirstObjectByType<MenuToggle>();
-        
-        // Load saved volumes or set defaults
+        RegisterListenersIfNeeded();
+        ApplySavedSettings();
+    }
+
+    void OnEnable()
+    {
+        RegisterListenersIfNeeded();
+        ApplySavedSettings();
+    }
+
+    private void RegisterListenersIfNeeded()
+    {
+        if (listenersRegistered)
+            return;
+
+        if (sfxVolumeSlider != null)
+            sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        if (musicVolumeSlider != null)
+            musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+
+        listenersRegistered = true;
+    }
+
+    public void ApplySavedSettings()
+    {
         float sfxVolume = PlayerPrefs.GetFloat(SettingsKeys.SfxVolume, 0.5f);
         float musicVolume = PlayerPrefs.GetFloat(SettingsKeys.MusicVolume, 0.5f);
-        
+
         if (sfxVolumeSlider != null)
-        {
-            sfxVolumeSlider.value = sfxVolume;
-            sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
-        }
-        
+            sfxVolumeSlider.SetValueWithoutNotify(sfxVolume);
+
         if (musicVolumeSlider != null)
-        {
-            musicVolumeSlider.value = musicVolume;
-            musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
-        }
-        
-        // Apply the loaded volumes
+            musicVolumeSlider.SetValueWithoutNotify(musicVolume);
+
         SetSFXVolume(sfxVolume);
         SetMusicVolume(musicVolume);
     }
@@ -41,12 +57,6 @@ public class MainMenu : MonoBehaviour
         {
             menuToggle.CloseMenu();
         }
-    }
-
-    public void OpenAccessibilityMenu()
-    {
-        mainMenuPanel.SetActive(false);
-        accessibilityMenuPanel.SetActive(true);
     }
 
     public void SetSFXVolume(float volume)

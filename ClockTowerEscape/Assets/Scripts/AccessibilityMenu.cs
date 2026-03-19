@@ -4,8 +4,6 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class AccessibilityMenu : MonoBehaviour
 {
-    public GameObject mainMenuPanel;
-    public GameObject accessibilityMenuPanel;
     public GameObject teleport;
     public GameObject move;
     public GameObject snapTurn;
@@ -20,33 +18,60 @@ public class AccessibilityMenu : MonoBehaviour
     public Slider sensitivitySlider;
 
     private DesktopPlayer desktopPlayer;
+    private bool listenersRegistered = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        ApplySavedSettings();
+    }
+
+    void OnEnable()
+    {
+        ApplySavedSettings();
+    }
+
+    public void ApplySavedSettings()
+    {
+        RegisterListenersIfNeeded();
+        RefreshFromPrefs();
+    }
+
+    private void RegisterListenersIfNeeded()
+    {
+        if (listenersRegistered)
+            return;
+
         if (teleportToggle != null) teleportToggle.onValueChanged.AddListener(OnTeleportToggleChanged);
         if (moveToggle != null) moveToggle.onValueChanged.AddListener(OnMoveToggleChanged);
         if (snapTurnToggle != null) snapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
         if (continuousTurnToggle != null) continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
+        if (speedSlider != null) speedSlider.onValueChanged.AddListener(OnSpeedChanged);
+        if (sensitivitySlider != null) sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
+
+        listenersRegistered = true;
+    }
+
+    private void RefreshFromPrefs()
+    {
+        desktopPlayer = FindObjectOfType<DesktopPlayer>(true);
 
         bool useTeleport = PlayerPrefs.GetInt(SettingsKeys.LocomotionMode, 0) == 1;
         bool useContinuousTurn = PlayerPrefs.GetInt(SettingsKeys.TurnMode, 0) == 1;
         ApplyLocomotionMode(useTeleport, false);
         ApplyTurnMode(useContinuousTurn, false);
 
-        desktopPlayer = FindFirstObjectByType<DesktopPlayer>();
         if (speedSlider != null)
         {
             float savedSpeed = PlayerPrefs.GetFloat(SettingsKeys.PlayerSpeed, 5f);
-            speedSlider.value = savedSpeed;
-            speedSlider.onValueChanged.AddListener(OnSpeedChanged);
+            speedSlider.SetValueWithoutNotify(savedSpeed);
             OnSpeedChanged(savedSpeed);
         }
+
         if (sensitivitySlider != null)
         {
             float savedSensitivity = PlayerPrefs.GetFloat(SettingsKeys.MouseSensitivity, 2f);
-            sensitivitySlider.value = savedSensitivity;
-            sensitivitySlider.onValueChanged.AddListener(OnSensitivityChanged);
+            sensitivitySlider.SetValueWithoutNotify(savedSensitivity);
             OnSensitivityChanged(savedSensitivity);
         }
     }
@@ -54,12 +79,6 @@ public class AccessibilityMenu : MonoBehaviour
     void Update()
     {
 
-    }
-
-    public void BackToMainMenu()
-    {
-        mainMenuPanel.SetActive(true);
-        accessibilityMenuPanel.SetActive(false);
     }
 
     private void ApplyLocomotionMode(bool useTeleport, bool save)
@@ -121,21 +140,27 @@ public class AccessibilityMenu : MonoBehaviour
 
     void OnSpeedChanged(float speed)
     {
+        if (desktopPlayer == null)
+            desktopPlayer = FindObjectOfType<DesktopPlayer>(true);
+
         if (desktopPlayer != null)
         {
             desktopPlayer.SetMoveSpeed(speed);
         }
-        PlayerPrefs.SetFloat("PlayerSpeed", speed);
+        PlayerPrefs.SetFloat(SettingsKeys.PlayerSpeed, speed);
         PlayerPrefs.Save();
     }
 
     void OnSensitivityChanged(float sensitivity)
     {
+        if (desktopPlayer == null)
+            desktopPlayer = FindObjectOfType<DesktopPlayer>(true);
+
         if (desktopPlayer != null)
         {
             desktopPlayer.SetSensitivity(sensitivity);
         }
-        PlayerPrefs.SetFloat("MouseSensitivity", sensitivity);
+        PlayerPrefs.SetFloat(SettingsKeys.MouseSensitivity, sensitivity);
         PlayerPrefs.Save();
     }
 }

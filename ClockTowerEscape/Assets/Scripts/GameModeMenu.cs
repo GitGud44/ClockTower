@@ -18,6 +18,9 @@ public class GameModeMenu : MonoBehaviour
 
     public void StartDesktopMode()
     {
+        if (GameManager.Instance != null)
+            GameManager.Instance.RegisterModePlayers(desktopPlayerPrefab, vrPlayerPrefab);
+
         // Set the game mode in GameManager
         GameManager.Instance.SetGameMode(GameManager.PlayMode.Desktop);
 
@@ -47,6 +50,9 @@ public class GameModeMenu : MonoBehaviour
 
     public void StartVRMode()
     {
+        if (GameManager.Instance != null)
+            GameManager.Instance.RegisterModePlayers(desktopPlayerPrefab, vrPlayerPrefab);
+
         // Set the game mode in GameManager
         GameManager.Instance.SetGameMode(GameManager.PlayMode.VR);
 

@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     public enum PlayMode { None, Desktop, VR }
     public PlayMode CurrentPlayMode { get; private set; } = PlayMode.None;
 
+    private GameObject desktopPlayerRoot;
+    private GameObject vrPlayerRoot;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -33,6 +36,12 @@ public class GameManager : MonoBehaviour
         CurrentPlayMode = mode;
     }
 
+    public void RegisterModePlayers(GameObject desktopRoot, GameObject vrRoot)
+    {
+        desktopPlayerRoot = desktopRoot;
+        vrPlayerRoot = vrRoot;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         StartCoroutine(RepositionPlayerAfterSceneLoad(scene));
@@ -43,42 +52,69 @@ public class GameManager : MonoBehaviour
         yield return null;
 
         GameObject activePlayer = GetActivePlayerObject();
-        if (activePlayer == null)
+        if (activePlayer != null)
+        {
+            Transform spawnPoint = FindSpawnTransformInScene(loadedScene);
+            if (spawnPoint == null)
+            {
+                Debug.LogWarning($"[GameManager] No spawn point found in scene '{loadedScene.name}'. Use tag 'Respawn' or name 'SpawnPoint'.");
+            }
+            else
+            {
+                CharacterController characterController = activePlayer.GetComponent<CharacterController>();
+                if (characterController != null)
+                    characterController.enabled = false;
+
+                activePlayer.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+
+                if (characterController != null)
+                {
+                    characterController.enabled = true;
+                    characterController.Move(Vector3.zero);
+                }
+
+                DesktopPlayer desktopPlayer = activePlayer.GetComponent<DesktopPlayer>();
+                if (desktopPlayer != null)
+                {
+                    float savedSpeed = PlayerPrefs.GetFloat(SettingsKeys.PlayerSpeed, 5f);
+                    float savedSensitivity = PlayerPrefs.GetFloat(SettingsKeys.MouseSensitivity, 2f);
+                    desktopPlayer.SetMoveSpeed(savedSpeed);
+                    desktopPlayer.SetSensitivity(savedSensitivity);
+                    desktopPlayer.ResetLook();
+                }
+
+                Debug.Log($"[GameManager] Repositioned player '{activePlayer.name}' to spawn '{spawnPoint.name}' in scene '{loadedScene.name}'.");
+            }
+        }
+        else
         {
             Debug.LogWarning("[GameManager] No active player found after scene load.");
-            yield break;
         }
 
-        Transform spawnPoint = FindSpawnTransformInScene(loadedScene);
-        if (spawnPoint == null)
+        if (AudioManager.Instance != null)
         {
-            Debug.LogWarning($"[GameManager] No spawn point found in scene '{loadedScene.name}'. Use tag 'Respawn' or name 'SpawnPoint'.");
-            yield break;
+            float savedSfxVolume = PlayerPrefs.GetFloat(SettingsKeys.SfxVolume, 0.5f);
+            float savedMusicVolume = PlayerPrefs.GetFloat(SettingsKeys.MusicVolume, 0.5f);
+            AudioManager.Instance.SetSFXVolume(savedSfxVolume);
+            AudioManager.Instance.SetMusicVolume(savedMusicVolume);
         }
 
-        CharacterController characterController = activePlayer.GetComponent<CharacterController>();
-        if (characterController != null)
-            characterController.enabled = false;
+        MainMenu[] pauseMainMenus = FindObjectsOfType<MainMenu>(true);
+        for (int index = 0; index < pauseMainMenus.Length; index++)
+            pauseMainMenus[index].ApplySavedSettings();
 
-        activePlayer.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
-
-        if (characterController != null)
-        {
-            characterController.enabled = true;
-            characterController.Move(Vector3.zero);
-        }
-
-        DesktopPlayer desktopPlayer = activePlayer.GetComponent<DesktopPlayer>();
-        if (desktopPlayer != null)
-            desktopPlayer.ResetLook();
-
-        Debug.Log($"[GameManager] Repositioned player '{activePlayer.name}' to spawn '{spawnPoint.name}' in scene '{loadedScene.name}'.");
+        AccessibilityMenu[] accessibilityMenus = FindObjectsOfType<AccessibilityMenu>(true);
+        for (int index = 0; index < accessibilityMenus.Length; index++)
+            accessibilityMenus[index].ApplySavedSettings();
     }
 
     private GameObject GetActivePlayerObject()
     {
         if (CurrentPlayMode == PlayMode.Desktop)
         {
+            if (desktopPlayerRoot != null)
+                return desktopPlayerRoot;
+
             DesktopPlayer[] desktopPlayers = FindObjectsOfType<DesktopPlayer>(true);
             for (int index = 0; index < desktopPlayers.Length; index++)
             {
@@ -89,6 +125,11 @@ public class GameManager : MonoBehaviour
 
             if (desktopPlayers.Length > 0)
                 return desktopPlayers[0].gameObject;
+        }
+        else if (CurrentPlayMode == PlayMode.VR)
+        {
+            if (vrPlayerRoot != null)
+                return vrPlayerRoot;
         }
 
         return null;

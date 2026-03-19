@@ -4072,7 +4072,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &921748477
 Transform:
   m_ObjectHideFlags: 0
@@ -5238,6 +5238,37 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+--- !u!1 &1233061363
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1233061364}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1233061364
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233061363}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.68, y: 3.49, z: -0.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1239267471
 GameObject:
   m_ObjectHideFlags: 0
@@ -5255,7 +5286,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1239267472
 Transform:
   m_ObjectHideFlags: 0
@@ -5613,18 +5644,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edb2dbc34a0b8204b85a169db105b99d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioCuesSource: {fileID: 437464660}
-  musicSource: {fileID: 2119803471}
-  audioClips:
-  - {fileID: 8300000, guid: ec18ee13639b5d5498b64a679ca485c6, type: 3}
-  - {fileID: 8300000, guid: dd8d3087059bf0a42b8005e3504a993f, type: 3}
-  - {fileID: 8300000, guid: e4803cadb64c8f5498d2e69af3b9fd99, type: 3}
-  - {fileID: 8300000, guid: 1fcca7ac6d776504cb605c20235e892d, type: 3}
-  desktop_mode_objects: {fileID: 921748476}
-  vr_mode_objects: {fileID: 626809323}
-  VRPlayer: {fileID: 2091626213}
-  DesktopPlayer: {fileID: 1957257024}
-  start_position: {fileID: 1239267472}
 --- !u!4 &1282658766
 Transform:
   m_ObjectHideFlags: 0
@@ -9944,3 +9963,4 @@ SceneRoots:
   - {fileID: 2119803472}
   - {fileID: 1128895676}
   - {fileID: 527140037}
+  - {fileID: 1233061364}
