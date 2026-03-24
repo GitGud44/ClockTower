@@ -13,13 +13,13 @@ public class LanternPuzzleManager : MonoBehaviour
     [Tooltip("Fired when the puzzle is solved. Wire to ElevatorController.UnlockAndOpenDoors.")]
     public UnityEvent OnPuzzleSolved;
 
-    [Header("Audio Clip Indices")]
-    [Tooltip("Index in GameManager.audioClips for the LightLantern sound")]
-    public int lightLanternSoundIndex = 2;
-    [Tooltip("Index in GameManager.audioClips for success sound (optional)")]
-    public int successSoundIndex = -1;
-    [Tooltip("Index in GameManager.audioClips for fail/reset sound (optional)")]
-    public int failSoundIndex = -1;
+    [Header("Local Audio Clips (Optional)")]
+    [Tooltip("If assigned, this plays for success")]
+    public AudioClip successClip;
+    [Tooltip("If assigned, this plays for wrong order")]
+    public AudioClip failClip;
+    [Range(0f, 1f)]
+    public float puzzleSfxVolume = 1f;
 
     private List<LanternInteractable> litOrder = new List<LanternInteractable>();
 
@@ -27,10 +27,6 @@ public class LanternPuzzleManager : MonoBehaviour
     public void OnLanternLit(LanternInteractable lantern)
     {
         litOrder.Add(lantern);
-
-        // Play light sound
-        if (GameManager.Instance != null && lightLanternSoundIndex >= 0)
-            GameManager.Instance.PlaySound(lightLanternSoundIndex);
 
         Debug.Log($"Lantern lit: {lantern.name}. Total lit: {litOrder.Count}/{correctOrder.Length}");
 
@@ -67,9 +63,7 @@ public class LanternPuzzleManager : MonoBehaviour
 
     private IEnumerator ResetAllLanterns()
     {
-        // Play fail sound
-        if (GameManager.Instance != null && failSoundIndex >= 0)
-            GameManager.Instance.PlaySound(failSoundIndex);
+        PlayFailSound();
 
         // Wait a moment before extinguishing
         yield return new WaitForSeconds(1f);
@@ -86,11 +80,21 @@ public class LanternPuzzleManager : MonoBehaviour
 
     private void OpenElevatorDoor()
     {
-        // Play success sound
-        if (GameManager.Instance != null && successSoundIndex >= 0)
-            GameManager.Instance.PlaySound(successSoundIndex);
+        PlaySuccessSound();
 
         // Trigger the elevator to unlock and open
         OnPuzzleSolved?.Invoke();
+    }
+
+    private void PlayFailSound()
+    {
+        if (failClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(failClip, transform.position, puzzleSfxVolume, 1f);
+    }
+
+    private void PlaySuccessSound()
+    {
+        if (successClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(successClip, transform.position, puzzleSfxVolume, 1f);
     }
 }

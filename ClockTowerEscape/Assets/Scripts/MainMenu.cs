@@ -7,34 +7,26 @@ public class MainMenu : MonoBehaviour
     public GameObject accessibilityMenuPanel;
     public Slider sfxVolumeSlider;
     public Slider musicVolumeSlider;
-    public AudioSource sfxAudioSource;
-    public AudioSource musicAudioSource;
     
     private MenuToggle menuToggle;
 
     void Start()
     {
         menuToggle = FindFirstObjectByType<MenuToggle>();
-        
-        // Load saved volumes or set defaults
-        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 50f);
-        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 50f);
-        
+
         if (sfxVolumeSlider != null)
-        {
-            sfxVolumeSlider.value = sfxVolume;
             sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
-        }
-        
+
         if (musicVolumeSlider != null)
-        {
-            musicVolumeSlider.value = musicVolume;
             musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
-        }
-        
-        // Apply the loaded volumes
-        SetSFXVolume(sfxVolume);
-        SetMusicVolume(musicVolume);
+
+        RefreshAudioSettings();
+    }
+
+    void OnEnable()
+    {
+        menuToggle = FindFirstObjectByType<MenuToggle>();
+        RefreshAudioSettings();
     }
 
     public void ResumeGame()
@@ -47,28 +39,18 @@ public class MainMenu : MonoBehaviour
 
     public void OpenAccessibilityMenu()
     {
-        mainMenuPanel.SetActive(false);
-        accessibilityMenuPanel.SetActive(true);
+        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
+        if (accessibilityMenuPanel != null) accessibilityMenuPanel.SetActive(true);
     }
 
     public void SetSFXVolume(float volume)
     {
-        if (sfxAudioSource != null)
-        {
-            sfxAudioSource.volume = volume;
-        }
-        PlayerPrefs.SetFloat("SFXVolume", volume);
-        PlayerPrefs.Save();
+        SettingsState.SetSfxVolume(volume);
     }
 
     public void SetMusicVolume(float volume)
     {
-        if (musicAudioSource != null)
-        {
-            musicAudioSource.volume = volume;
-        }
-        PlayerPrefs.SetFloat("MusicVolume", volume);
-        PlayerPrefs.Save();
+        SettingsState.SetMusicVolume(volume);
     }
 
     public void QuitGame()
@@ -78,5 +60,19 @@ public class MainMenu : MonoBehaviour
         #else
             Application.Quit();
         #endif
+    }
+
+    private void RefreshAudioSettings()
+    {
+        float sfxVolume = SettingsState.GetSfxVolume();
+        float musicVolume = SettingsState.GetMusicVolume();
+
+        if (sfxVolumeSlider != null)
+            sfxVolumeSlider.SetValueWithoutNotify(sfxVolume);
+
+        if (musicVolumeSlider != null)
+            musicVolumeSlider.SetValueWithoutNotify(musicVolume);
+
+        SettingsState.ApplyRuntimeSettings();
     }
 }

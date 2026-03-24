@@ -9,8 +9,6 @@ public class MenuToggle : MonoBehaviour
     void Start()
     {
         UIMenu.SetActive(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame

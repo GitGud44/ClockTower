@@ -13,8 +13,6 @@ public class StartMenu : MonoBehaviour
 
     public Slider sfxVolumeSlider;
     public Slider musicVolumeSlider;
-    public AudioSource sfxAudioSource;
-    public AudioSource musicAudioSource;
 
     public GameObject teleport;
     public GameObject move;
@@ -28,6 +26,20 @@ public class StartMenu : MonoBehaviour
     public Slider sensitivitySlider;
 
     private bool isTransitioning = false;
+
+    void Update()
+    {
+        if (isTransitioning) return;
+
+        bool shouldKeepCursorUnlocked = GameManager.Instance == null ||
+                                        GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.Desktop;
+
+        if (shouldKeepCursorUnlocked)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
 
     void Start()
     {
@@ -45,18 +57,18 @@ public class StartMenu : MonoBehaviour
 
     private void LoadVolumeSettings()
     {
-        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
-        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+        float sfxVolume = SettingsState.GetSfxVolume();
+        float musicVolume = SettingsState.GetMusicVolume();
 
         if (sfxVolumeSlider != null)
         {
-            sfxVolumeSlider.value = sfxVolume;
+            sfxVolumeSlider.SetValueWithoutNotify(sfxVolume);
             sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
         }
 
         if (musicVolumeSlider != null)
         {
-            musicVolumeSlider.value = musicVolume;
+            musicVolumeSlider.SetValueWithoutNotify(musicVolume);
             musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
         }
 
@@ -77,22 +89,23 @@ public class StartMenu : MonoBehaviour
         if (continuousTurnToggle != null)
             continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
 
-        if (moveToggle != null) moveToggle.isOn = true;
-        if (move != null) move.SetActive(true);
-        if (teleportToggle != null) teleportToggle.isOn = false;
-        if (teleport != null) teleport.SetActive(false);
+        bool useTeleport = SettingsState.GetUseTeleport();
+        bool useContinuousTurn = SettingsState.GetUseContinuousTurn();
 
-        float savedSpeed = PlayerPrefs.GetFloat("PlayerSpeed", 5f);
+        ApplyLocomotionMode(useTeleport, false);
+        ApplyTurnMode(useContinuousTurn, false);
+
+        float savedSpeed = SettingsState.GetPlayerSpeed();
         if (speedSlider != null)
         {
-            speedSlider.value = savedSpeed;
+            speedSlider.SetValueWithoutNotify(savedSpeed);
             speedSlider.onValueChanged.AddListener(SetPlayerSpeed);
         }
 
-        float savedSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 2f);
+        float savedSensitivity = SettingsState.GetMouseSensitivity();
         if (sensitivitySlider != null)
         {
-            sensitivitySlider.value = savedSensitivity;
+            sensitivitySlider.SetValueWithoutNotify(savedSensitivity);
             sensitivitySlider.onValueChanged.AddListener(SetMouseSensitivity);
         }
     }
@@ -101,6 +114,22 @@ public class StartMenu : MonoBehaviour
     {
         if (isTransitioning) return;
         isTransitioning = true;
+
+        // Lock and hide cursor when leaving the menu
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        // If Desktop mode was chosen, turn on the DesktopPlayer script now
+        if (GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.Desktop)
+        {
+            // Older Unity versions use the bool overload for includeInactive
+            var desktopController = FindObjectOfType<DesktopPlayer>(true);
+            if (desktopController != null && desktopController.enabled == false)
+            {
+                desktopController.enabled = true;
+            }
+        }
+
         StartCoroutine(StartGameWithFade());
     }
 
@@ -126,89 +155,75 @@ public class StartMenu : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
-        if (sfxAudioSource != null)
-            sfxAudioSource.volume = volume;
-        
-        PlayerPrefs.SetFloat("SFXVolume", volume);
-        PlayerPrefs.Save();
+        SettingsState.SetSfxVolume(volume);
     }
 
     public void SetMusicVolume(float volume)
     {
-        if (musicAudioSource != null)
-            musicAudioSource.volume = volume;
-        
-        PlayerPrefs.SetFloat("MusicVolume", volume);
-        PlayerPrefs.Save();
+        SettingsState.SetMusicVolume(volume);
+    }
+
+    private void ApplyLocomotionMode(bool useTeleport, bool save)
+    {
+        if (teleportToggle != null) teleportToggle.SetIsOnWithoutNotify(useTeleport);
+        if (moveToggle != null) moveToggle.SetIsOnWithoutNotify(!useTeleport);
+
+        if (teleport != null) teleport.SetActive(useTeleport);
+        if (move != null) move.SetActive(!useTeleport);
+
+        if (save)
+        {
+            SettingsState.SetLocomotionMode(useTeleport);
+        }
+    }
+
+    private void ApplyTurnMode(bool useContinuousTurn, bool save)
+    {
+        if (continuousTurnToggle != null) continuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
+        if (snapTurnToggle != null) snapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
+
+        if (continuousTurn != null) continuousTurn.SetActive(useContinuousTurn);
+        if (snapTurn != null) snapTurn.SetActive(!useContinuousTurn);
+
+        if (save)
+        {
+            SettingsState.SetTurnMode(useContinuousTurn);
+        }
     }
 
 
     void OnTeleportToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (moveToggle != null) moveToggle.isOn = false;
-            if (teleport != null) teleport.SetActive(true);
-            if (move != null) move.SetActive(false);
-        }
-        else
-        {
-            if (teleport != null) teleport.SetActive(false);
-        }
+            ApplyLocomotionMode(true, true);
     }
 
     void OnMoveToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (teleportToggle != null) teleportToggle.isOn = false;
-            if (move != null) move.SetActive(true);
-            if (teleport != null) teleport.SetActive(false);
-        }
-        else
-        {
-            if (move != null) move.SetActive(false);
-        }
+            ApplyLocomotionMode(false, true);
     }
 
     void OnSnapTurnToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (continuousTurnToggle != null) continuousTurnToggle.isOn = false;
-            if (snapTurn != null) snapTurn.SetActive(true);
-            if (continuousTurn != null) continuousTurn.SetActive(false);
-        }
-        else
-        {
-            if (snapTurn != null) snapTurn.SetActive(false);
-        }
+            ApplyTurnMode(false, true);
     }
 
     void OnContinuousTurnToggleChanged(bool isOn)
     {
         if (isOn)
-        {
-            if (snapTurnToggle != null) snapTurnToggle.isOn = false;
-            if (continuousTurn != null) continuousTurn.SetActive(true);
-            if (snapTurn != null) snapTurn.SetActive(false);
-        }
-        else
-        {
-            if (continuousTurn != null) continuousTurn.SetActive(false);
-        }
+            ApplyTurnMode(true, true);
     }
 
     public void SetPlayerSpeed(float speed)
     {
-        PlayerPrefs.SetFloat("PlayerSpeed", speed);
-        PlayerPrefs.Save();
+        SettingsState.SetPlayerSpeed(speed);
     }
 
     public void SetMouseSensitivity(float sensitivity)
     {
-        PlayerPrefs.SetFloat("MouseSensitivity", sensitivity);
-        PlayerPrefs.Save();
+        SettingsState.SetMouseSensitivity(sensitivity);
     }
 
     private IEnumerator StartGameWithFade()
@@ -219,7 +234,14 @@ public class StartMenu : MonoBehaviour
             yield return StartCoroutine(fm.FadeOut(fadeOutDuration));
 
         if (GameManager.Instance != null)
+        {
             DontDestroyOnLoad(GameManager.Instance.gameObject);
+            GameManager.Instance.StartMusic();
+        }
+        else if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StartMusic();
+        }
 
         SceneManager.LoadScene(firstSceneName);
     }
