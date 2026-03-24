@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameModeMenu : MonoBehaviour
@@ -13,6 +12,10 @@ public class GameModeMenu : MonoBehaviour
     public GameObject desktopPlayerPrefab;
     public GameObject vrPlayerPrefab;
 
+    [Header("Pause Menus")]
+    public GameObject desktopPauseMenu;
+    public GameObject vrPauseMenu;
+
     [Header("Cameras")]
     public Camera menuCamera;
 
@@ -20,6 +23,7 @@ public class GameModeMenu : MonoBehaviour
     {
         // Set the game mode in GameManager
         GameManager.Instance.SetGameMode(GameManager.PlayMode.Desktop);
+        EnsurePauseMenu(GameManager.PlayMode.Desktop);
 
         // Show desktop UI and hide VR UI
         if (desktopMenuUI != null) desktopMenuUI.SetActive(true);
@@ -49,6 +53,7 @@ public class GameModeMenu : MonoBehaviour
     {
         // Set the game mode in GameManager
         GameManager.Instance.SetGameMode(GameManager.PlayMode.VR);
+        EnsurePauseMenu(GameManager.PlayMode.VR);
 
         // Show VR UI and hide desktop UI
         if (vrMenuUI != null) vrMenuUI.SetActive(true);
@@ -75,6 +80,54 @@ public class GameModeMenu : MonoBehaviour
         if (modeMenuPanel != null) modeMenuPanel.SetActive(false);
         if (menuCamera != null) menuCamera.gameObject.SetActive(false);
     }
+
+    private void EnsurePauseMenu(GameManager.PlayMode mode)
+    {
+        PauseMenuPersistence pauseMenu = PauseMenuPersistence.Instance;
+        GameObject desiredPauseMenu = mode == GameManager.PlayMode.Desktop ? desktopPauseMenu : vrPauseMenu;
+
+        if (pauseMenu != null && pauseMenu.MenuMode != mode)
+        {
+            Destroy(pauseMenu.gameObject);
+            pauseMenu = null;
+        }
+
+        if (pauseMenu == null)
+        {
+            if (desiredPauseMenu == null)
+                return;
+
+            GameObject pauseMenuObject = GetOrCreatePauseMenuObject(desiredPauseMenu);
+            if (pauseMenuObject == null)
+                return;
+
+            GameObject pauseMenuRoot = pauseMenuObject.transform.root.gameObject;
+
+            if (pauseMenuRoot.scene.IsValid() && pauseMenuRoot.scene.isLoaded)
+                DontDestroyOnLoad(pauseMenuRoot);
+
+            pauseMenu = pauseMenuRoot.GetComponent<PauseMenuPersistence>();
+            if (pauseMenu == null)
+                pauseMenu = pauseMenuRoot.AddComponent<PauseMenuPersistence>();
+        }
+
+        if (pauseMenu != null)
+        {
+            pauseMenu.Initialize(mode);
+            pauseMenu.gameObject.SetActive(true);
+        }
+    }
+
+    private GameObject GetOrCreatePauseMenuObject(GameObject pauseMenuReference)
+    {
+        if (pauseMenuReference == null)
+            return null;
+
+        if (pauseMenuReference.scene.IsValid() && pauseMenuReference.scene.isLoaded)
+            return pauseMenuReference;
+
+        return Instantiate(pauseMenuReference);
+    }
     
     public void QuitGame()
     {
@@ -85,4 +138,3 @@ public class GameModeMenu : MonoBehaviour
         #endif
     }
 }
-

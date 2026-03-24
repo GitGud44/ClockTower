@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -8,11 +10,9 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;
     public AudioSource musicSource;
 
-    [Header("SFX Clips")]
-    public AudioClip[] soundEffects = new AudioClip[10]; // Adjust size as needed
-
     [Header("Music Clips")]
     public AudioClip backgroundMusic;
+    public bool playMusicOnAwake = true;
 
     private void Awake()
     {
@@ -24,74 +24,129 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Initialize audio sources if not assigned
+        EnsureOwnedAudioSources();
+
+        SetSFXVolume(SettingsState.GetSfxVolume());
+        SetMusicVolume(SettingsState.GetMusicVolume());
+
+        if (playMusicOnAwake)
+            StartMusic();
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        EnsureOwnedAudioSources();
+        SetSFXVolume(SettingsState.GetSfxVolume());
+        SetMusicVolume(SettingsState.GetMusicVolume());
+
+        if (playMusicOnAwake)
+            StartMusic();
+    }
+
+    private void EnsureOwnedAudioSources()
+    {
+        if (sfxSource == null || sfxSource.gameObject != gameObject)
+        {
+            sfxSource = GetComponent<AudioSource>();
+            if (sfxSource == null)
+                sfxSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        if (musicSource == null || musicSource.gameObject != gameObject || musicSource == sfxSource)
+        {
+            AudioSource[] allSources = GetComponents<AudioSource>();
+            musicSource = null;
+
+            for (int index = 0; index < allSources.Length; index++)
+            {
+                if (allSources[index] != sfxSource)
+                {
+                    musicSource = allSources[index];
+                    break;
+                }
+            }
+
+            if (musicSource == null)
+                musicSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        sfxSource.playOnAwake = false;
+        musicSource.playOnAwake = false;
+        musicSource.loop = true;
+    }
+
+    public void PlayClip(AudioClip clip, float volumeScale = 1f)
+    {
+        EnsureOwnedAudioSources();
+
+        if (clip == null)
+            return;
+
         if (sfxSource == null)
-            sfxSource = gameObject.AddComponent<AudioSource>();
-        if (musicSource == null)
-            musicSource = gameObject.AddComponent<AudioSource>();
+            return;
+
+        sfxSource.PlayOneShot(clip, Mathf.Clamp01(volumeScale));
     }
 
-    /// <summary>
-    /// Plays a sound effect by index
-    /// </summary>
-    /// <param name="soundIndex">Index of the sound effect in the soundEffects array</param>
-    public void PlaySound(int soundIndex)
+    public void PlaySpatialClip(AudioClip clip, Vector3 worldPosition, float volumeScale = 1f, float spatialBlend = 1f)
     {
-        if (sfxSource != null && soundEffects != null && soundIndex >= 0 && soundIndex < soundEffects.Length)
+        if (clip == null)
         {
-            if (soundEffects[soundIndex] != null)
-            {
-                sfxSource.PlayOneShot(soundEffects[soundIndex]);
-            }
-            else
-            {
-                Debug.LogWarning($"Sound effect at index {soundIndex} is not assigned!");
-            }
+            return;
         }
-        else
+
+        GameObject tempAudioObject = new GameObject($"TempSpatialSfx_{clip.name}");
+        tempAudioObject.transform.position = worldPosition;
+
+        AudioSource tempSource = tempAudioObject.AddComponent<AudioSource>();
+        tempSource.playOnAwake = false;
+        tempSource.clip = clip;
+        tempSource.spatialBlend = Mathf.Clamp01(spatialBlend);
+        tempSource.rolloffMode = AudioRolloffMode.Logarithmic;
+        tempSource.minDistance = 1f;
+        tempSource.maxDistance = 20f;
+
+        float baseSfxVolume = sfxSource != null ? sfxSource.volume : 1f;
+        tempSource.volume = Mathf.Clamp01(baseSfxVolume * Mathf.Clamp01(volumeScale));
+
+        if (sfxSource != null)
         {
-            Debug.LogWarning($"Invalid sound index: {soundIndex}");
+            AudioMixerGroup sfxMixerGroup = sfxSource.outputAudioMixerGroup;
+            if (sfxMixerGroup != null)
+                tempSource.outputAudioMixerGroup = sfxMixerGroup;
         }
+
+        tempSource.Play();
+        Destroy(tempAudioObject, clip.length + 0.1f);
     }
 
-    /// <summary>
-    /// Plays a sound effect with specified volume
-    /// </summary>
-    public void PlaySound(int soundIndex, float volume)
-    {
-        if (sfxSource != null && soundEffects != null && soundIndex >= 0 && soundIndex < soundEffects.Length)
-        {
-            if (soundEffects[soundIndex] != null)
-            {
-                sfxSource.PlayOneShot(soundEffects[soundIndex], volume);
-            }
-            else
-            {
-                Debug.LogWarning($"Sound effect at index {soundIndex} is not assigned!");
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"Invalid sound index: {soundIndex}");
-        }
-    }
 
-    /// <summary>
-    /// Starts playing background music
-    /// </summary>
     public void StartMusic()
     {
-        if (musicSource != null && backgroundMusic != null && !musicSource.isPlaying)
-        {
+        EnsureOwnedAudioSources();
+
+        if (musicSource == null || backgroundMusic == null)
+            return;
+
+        if (musicSource.clip != backgroundMusic)
             musicSource.clip = backgroundMusic;
+
+        if (!musicSource.isPlaying)
+        {
             musicSource.loop = true;
             musicSource.Play();
         }
     }
 
-    /// <summary>
-    /// Stops background music
-    /// </summary>
+
     public void StopMusic()
     {
         if (musicSource != null && musicSource.isPlaying)
@@ -100,9 +155,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Pauses background music
-    /// </summary>
+
     public void PauseMusic()
     {
         if (musicSource != null && musicSource.isPlaying)
@@ -111,9 +164,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Resumes background music
-    /// </summary>
+
     public void ResumeMusic()
     {
         if (musicSource != null && !musicSource.isPlaying)
@@ -122,22 +173,21 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Sets the volume of sound effects (0-1)
-    /// </summary>
+
     public void SetSFXVolume(float volume)
     {
+        EnsureOwnedAudioSources();
+
         if (sfxSource != null)
         {
             sfxSource.volume = Mathf.Clamp01(volume);
         }
     }
 
-    /// <summary>
-    /// Sets the volume of music (0-1)
-    /// </summary>
     public void SetMusicVolume(float volume)
     {
+        EnsureOwnedAudioSources();
+
         if (musicSource != null)
         {
             musicSource.volume = Mathf.Clamp01(volume);

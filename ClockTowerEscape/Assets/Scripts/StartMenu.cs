@@ -57,18 +57,18 @@ public class StartMenu : MonoBehaviour
 
     private void LoadVolumeSettings()
     {
-        float sfxVolume = PlayerPrefs.GetFloat(SettingsKeys.SfxVolume, 0.5f);
-        float musicVolume = PlayerPrefs.GetFloat(SettingsKeys.MusicVolume, 0.5f);
+        float sfxVolume = SettingsState.GetSfxVolume();
+        float musicVolume = SettingsState.GetMusicVolume();
 
         if (sfxVolumeSlider != null)
         {
-            sfxVolumeSlider.value = sfxVolume;
+            sfxVolumeSlider.SetValueWithoutNotify(sfxVolume);
             sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
         }
 
         if (musicVolumeSlider != null)
         {
-            musicVolumeSlider.value = musicVolume;
+            musicVolumeSlider.SetValueWithoutNotify(musicVolume);
             musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
         }
 
@@ -89,23 +89,23 @@ public class StartMenu : MonoBehaviour
         if (continuousTurnToggle != null)
             continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
 
-        bool useTeleport = PlayerPrefs.GetInt(SettingsKeys.LocomotionMode, 0) == 1;
-        bool useContinuousTurn = PlayerPrefs.GetInt(SettingsKeys.TurnMode, 0) == 1;
+        bool useTeleport = SettingsState.GetUseTeleport();
+        bool useContinuousTurn = SettingsState.GetUseContinuousTurn();
 
         ApplyLocomotionMode(useTeleport, false);
         ApplyTurnMode(useContinuousTurn, false);
 
-        float savedSpeed = PlayerPrefs.GetFloat(SettingsKeys.PlayerSpeed, 5f);
+        float savedSpeed = SettingsState.GetPlayerSpeed();
         if (speedSlider != null)
         {
-            speedSlider.value = savedSpeed;
+            speedSlider.SetValueWithoutNotify(savedSpeed);
             speedSlider.onValueChanged.AddListener(SetPlayerSpeed);
         }
 
-        float savedSensitivity = PlayerPrefs.GetFloat(SettingsKeys.MouseSensitivity, 2f);
+        float savedSensitivity = SettingsState.GetMouseSensitivity();
         if (sensitivitySlider != null)
         {
-            sensitivitySlider.value = savedSensitivity;
+            sensitivitySlider.SetValueWithoutNotify(savedSensitivity);
             sensitivitySlider.onValueChanged.AddListener(SetMouseSensitivity);
         }
     }
@@ -155,20 +155,12 @@ public class StartMenu : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.SetSFXVolume(volume);
-        
-        PlayerPrefs.SetFloat(SettingsKeys.SfxVolume, volume);
-        PlayerPrefs.Save();
+        SettingsState.SetSfxVolume(volume);
     }
 
     public void SetMusicVolume(float volume)
     {
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.SetMusicVolume(volume);
-        
-        PlayerPrefs.SetFloat(SettingsKeys.MusicVolume, volume);
-        PlayerPrefs.Save();
+        SettingsState.SetMusicVolume(volume);
     }
 
     private void ApplyLocomotionMode(bool useTeleport, bool save)
@@ -181,8 +173,7 @@ public class StartMenu : MonoBehaviour
 
         if (save)
         {
-            PlayerPrefs.SetInt(SettingsKeys.LocomotionMode, useTeleport ? 1 : 0);
-            PlayerPrefs.Save();
+            SettingsState.SetLocomotionMode(useTeleport);
         }
     }
 
@@ -196,8 +187,7 @@ public class StartMenu : MonoBehaviour
 
         if (save)
         {
-            PlayerPrefs.SetInt(SettingsKeys.TurnMode, useContinuousTurn ? 1 : 0);
-            PlayerPrefs.Save();
+            SettingsState.SetTurnMode(useContinuousTurn);
         }
     }
 
@@ -228,14 +218,12 @@ public class StartMenu : MonoBehaviour
 
     public void SetPlayerSpeed(float speed)
     {
-        PlayerPrefs.SetFloat(SettingsKeys.PlayerSpeed, speed);
-        PlayerPrefs.Save();
+        SettingsState.SetPlayerSpeed(speed);
     }
 
     public void SetMouseSensitivity(float sensitivity)
     {
-        PlayerPrefs.SetFloat(SettingsKeys.MouseSensitivity, sensitivity);
-        PlayerPrefs.Save();
+        SettingsState.SetMouseSensitivity(sensitivity);
     }
 
     private IEnumerator StartGameWithFade()
@@ -248,6 +236,11 @@ public class StartMenu : MonoBehaviour
         if (GameManager.Instance != null)
         {
             DontDestroyOnLoad(GameManager.Instance.gameObject);
+            GameManager.Instance.StartMusic();
+        }
+        else if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StartMusic();
         }
 
         SceneManager.LoadScene(firstSceneName);

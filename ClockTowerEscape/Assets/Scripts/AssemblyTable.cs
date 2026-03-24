@@ -20,6 +20,11 @@ public class AssemblyTable : MonoBehaviour
     [Tooltip("Only used in Snap Mode. Where snapped items go.")]
     public Transform snapPoint;
 
+    [Header("Audio")]
+    public AudioClip placementClip;
+    [Range(0f, 1f)]
+    public float placementVolume = 1f;
+
     private List<GameObject> snappedItems = new List<GameObject>();
     private HashSet<GameObject> ignoredItems = new HashSet<GameObject>();
 
@@ -73,7 +78,8 @@ public class AssemblyTable : MonoBehaviour
             {
                 Debug.Log("Item placed on table: " + slot.acceptedTag);
 
-                if (GameManager.Instance != null) GameManager.Instance.PlaySound(1);
+                if (placementClip != null && AudioManager.Instance != null)
+                    AudioManager.Instance.PlayClip(placementClip, placementVolume);
 
                 ForceReleaseXR(other.gameObject);
                 Destroy(other.gameObject);
@@ -195,7 +201,8 @@ public class AssemblyTable : MonoBehaviour
 
         Debug.Log("Item snapped to table: " + other.gameObject.name);
 
-        if (GameManager.Instance != null) GameManager.Instance.PlaySound(1);
+        if (placementClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlayClip(placementClip, placementVolume);
 
         GameObject item = other.gameObject;
 

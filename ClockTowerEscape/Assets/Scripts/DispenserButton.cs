@@ -8,6 +8,11 @@ public class DispenserButton : MonoBehaviour
     public Transform prefab_to_spawn;
     public Vector3 pressOffset = new Vector3(0.05f, 0, 0);
 
+    [Header("Audio")]
+    public AudioClip buttonPressClip;
+    [Range(0f, 1f)]
+    public float buttonPressVolume = 1f;
+
     private Transform current_spawned_prefab;
     private Vector3 originalButtonPosition;
 
@@ -37,7 +42,8 @@ public class DispenserButton : MonoBehaviour
                 is_button_pressed = true;
                 has_spawned_this_press = true;
 
-                if (GameManager.Instance != null) GameManager.Instance.PlaySound(0);
+                if (buttonPressClip != null && AudioManager.Instance != null)
+                    AudioManager.Instance.PlayClip(buttonPressClip, buttonPressVolume);
 
                 button_visual_position.position = originalButtonPosition + pressOffset;
                 Invoke(nameof(ReadyToUnpress), 1f);
@@ -87,7 +93,8 @@ public class DispenserButton : MonoBehaviour
         Debug.Log("button is pressed (desktop)!");
         is_button_pressed = true;
 
-        if (GameManager.Instance != null) GameManager.Instance.PlaySound(0);
+        if (buttonPressClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlayClip(buttonPressClip, buttonPressVolume);
 
         button_visual_position.position = originalButtonPosition + pressOffset;
 
