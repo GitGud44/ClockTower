@@ -13,6 +13,12 @@ public class LanternInteractable : MonoBehaviour
     [Tooltip("Tag on the candle object for VR trigger detection")]
     public string candleTag = "Candle";
 
+    [Header("Audio")]
+    [Tooltip("Local SFX played when this lantern is lit")]
+    public AudioClip lightLanternClip;
+    [Range(0f, 1f)]
+    public float lightLanternVolume = 1f;
+
     private bool isLit = false;
 
     void Awake()
@@ -75,6 +81,9 @@ public class LanternInteractable : MonoBehaviour
         // Activate the light
         if (lanternLight != null)
             lanternLight.SetActive(true);
+
+        if (lightLanternClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(lightLanternClip, transform.position, lightLanternVolume, 1f);
 
         // Notify the puzzle manager
         if (puzzleManager != null)

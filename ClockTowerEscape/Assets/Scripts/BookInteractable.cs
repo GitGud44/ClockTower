@@ -3,8 +3,10 @@ using UnityEngine;
 public class BookInteractable : MonoBehaviour
 {
     [Header("Audio")]
-    [Tooltip("Index in GameManager.audioClips for the PageFlip sound")]
-    public int pageFlipSoundIndex = 3;
+    [Tooltip("Local clip for spatial page-flip playback")]
+    public AudioClip pageFlipClip;
+    [Range(0f, 1f)]
+    public float pageFlipVolume = 1f;
 
     private int hand_colliders_inside = 0;
 
@@ -21,8 +23,10 @@ public class BookInteractable : MonoBehaviour
     // Desktop mode: player clicks on book
     private void OnBookInteracted()
     {
-        if (GameManager.Instance != null)
-            GameManager.Instance.PlaySound(pageFlipSoundIndex);
+        if (pageFlipClip != null && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySpatialClip(pageFlipClip, transform.position, pageFlipVolume, 1f);
+        }
 
         Debug.Log("Book interacted - playing PageFlip sound");
 

@@ -4,8 +4,10 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class CandlePickup : MonoBehaviour
 {
     [Header("Audio")]
-    [Tooltip("Index in GameManager.audioClips for the PickupCandle sound")]
-    public int pickupSoundIndex = 4;
+    [Tooltip("Local clip for spatial pickup playback")]
+    public AudioClip pickupClip;
+    [Range(0f, 1f)]
+    public float pickupVolume = 1f;
 
     private bool hasBeenPickedUp = false;
 
@@ -35,8 +37,8 @@ public class CandlePickup : MonoBehaviour
         {
             hasBeenPickedUp = true;
 
-            if (GameManager.Instance != null)
-                GameManager.Instance.PlaySound(pickupSoundIndex);
+            if (pickupClip != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySpatialClip(pickupClip, transform.position, pickupVolume, 1f);
 
             Debug.Log("Candle picked up - playing PickupCandle sound");
         }

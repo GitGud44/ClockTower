@@ -781,7 +781,8 @@ MonoBehaviour:
   doorSlideDuration: 1.1
   delayBetweenDoorPairs: 0.19
   nextSceneName: ElevatorArrivalDemo
-  dingSoundIndex: -1
+  dingSoundClip: {fileID: 8300000, guid: dd8d3087059bf0a42b8005e3504a993f, type: 3}
+  dingVolume: 1
   fadeOutDuration: 1.5
   playerTag: Player
   startsLocked: 1

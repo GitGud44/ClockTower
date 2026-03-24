@@ -24,8 +24,10 @@ public class ElevatorController : MonoBehaviour
     [Header("Scene Transition")]
     [Tooltip("Scene name as it appears in Build Settings")]
     public string nextSceneName;
-    [Tooltip("Index in GameManager.audioClips for the elevator ding. -1 = silent.")]
-    public int dingSoundIndex  = -1;
+    [Tooltip("Optional local clip for the elevator ding.")]
+    public AudioClip dingSoundClip;
+    [Range(0f, 1f)]
+    public float dingVolume = 1f;
     public float fadeOutDuration = 1.5f;
 
     [Header("Player Detection")]
@@ -132,8 +134,8 @@ public class ElevatorController : MonoBehaviour
         //play ding and dont destroy GameManager in the next scene
         if (GameManager.Instance != null)
         {
-            if (dingSoundIndex >= 0)
-                GameManager.Instance.PlaySound(dingSoundIndex);
+            if (dingSoundClip != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlayClip(dingSoundClip, dingVolume);
 
             DontDestroyOnLoad(GameManager.Instance.gameObject);
         }

@@ -18,8 +18,9 @@ public class Bell : MonoBehaviour
     public float pauseBetweenSwings = 0.1f;
     [Tooltip("Audio clip to play on each ring.")]
     public AudioClip bellSound;
-    [Tooltip("AudioSource from where to play the bell sound.")]
-    public AudioSource audioSource;
+    [Tooltip("Volume multiplier for bell ring playback.")]
+    [Range(0f, 1f)]
+    public float bellVolume = 1f;
     private Quaternion initialRotation;
     private Coroutine ringRoutine;
 
@@ -72,8 +73,8 @@ public class Bell : MonoBehaviour
             for (int s = 0; s < swings; s++)
             {
                 yield return StartCoroutine(SwingToAngle(direction * swingAngle));
-                if (audioSource && bellSound)
-                    audioSource.PlayOneShot(bellSound);
+                if (bellSound != null && AudioManager.Instance != null)
+                    AudioManager.Instance.PlaySpatialClip(bellSound, transform.position, bellVolume, 1f);
                 //other direction
                 direction *= -1f;
                 yield return new WaitForSeconds(pauseBetweenSwings);
