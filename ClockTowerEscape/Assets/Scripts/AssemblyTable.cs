@@ -14,6 +14,10 @@ public class AssemblyTable : MonoBehaviour
     [Tooltip("Only used in Display Mode. Child objects on the table that represent placed items.")]
     public TableSlot[] slots;
 
+    public bool enforceOrder = false;
+    public int wrongOrderSoundIndex = 2;
+    private int nextSlotIndex = 0;
+
     [Header("Snap Mode Settings")]
     [Tooltip("Only used in Snap Mode. Tags that are accepted for snapping.")]
     public string[] snapAcceptedTags;
@@ -70,9 +74,40 @@ public class AssemblyTable : MonoBehaviour
 
     void HandleDisplayMode(Collider other)
     {
-        foreach (TableSlot slot in slots)
+        if (enforceOrder)
         {
-            if (slot.isFilled) continue;
+            // Only accept the next expected slot in sequence
+            if (nextSlotIndex >= slots.Length) return;
+
+            TableSlot nextSlot = slots[nextSlotIndex];
+            if (!other.CompareTag(nextSlot.acceptedTag))
+            {
+                // Check if it matches any slot at all — if so, it's out of order
+                bool isAnySlotTag = false;
+                foreach (TableSlot s in slots)
+                    if (other.CompareTag(s.acceptedTag)) { isAnySlotTag = true; break; }
+
+                if (isAnySlotTag && GameManager.Instance != null)
+                    GameManager.Instance.PlaySound(wrongOrderSoundIndex);
+                return;
+            }
+
+            Debug.Log("Item placed on table (ordered): " + nextSlot.acceptedTag);
+            if (GameManager.Instance != null) GameManager.Instance.PlaySound(1);
+
+            ForceReleaseXR(other.gameObject);
+            Destroy(other.gameObject);
+
+            nextSlot.isFilled = true;
+            nextSlotIndex++;
+
+            ActivateSlotDisplay(nextSlot);
+        }
+        else
+        {
+            foreach (TableSlot slot in slots)
+            {
+                if (slot.isFilled) continue;
 
             if (other.CompareTag(slot.acceptedTag))
             {
@@ -81,35 +116,39 @@ public class AssemblyTable : MonoBehaviour
                 if (placementClip != null && AudioManager.Instance != null)
                     AudioManager.Instance.PlayClip(placementClip, placementVolume);
 
-                ForceReleaseXR(other.gameObject);
-                Destroy(other.gameObject);
+                    ForceReleaseXR(other.gameObject);
+                    Destroy(other.gameObject);
 
-                slot.isFilled = true;
-                if (slot.displayObject != null)
-                {
-                    slot.displayObject.SetActive(true);
-
-                    // Desktop: RaycastInteractable for click
-                    RaycastInteractable interactable = slot.displayObject.GetComponent<RaycastInteractable>();
-                    if (interactable == null)
-                    {
-                        interactable = slot.displayObject.AddComponent<RaycastInteractable>();
-                        interactable.objectsToHighlight = new GameObject[] { slot.displayObject };
-                        interactable.emissionIntensity = 0.3f;
-                    }
-                    interactable.enabled = true;
-
-                    interactable.OnClick.RemoveAllListeners();
-                    TableSlot capturedSlot = slot;
-                    interactable.OnClick.AddListener(() => GrabFromSlot(capturedSlot));
-
-                    // VR: XRSimpleInteractable for select
-                    SetupVRClickable(slot.displayObject, () => GrabFromSlot(capturedSlot));
+                    slot.isFilled = true;
+                    ActivateSlotDisplay(slot);
+                    return;
                 }
-
-                return;
             }
         }
+    }
+
+     void ActivateSlotDisplay(TableSlot slot)
+    {
+        if (slot.displayObject == null) return;
+
+        slot.displayObject.SetActive(true);
+
+        RaycastInteractable interactable = slot.displayObject.GetComponent<RaycastInteractable>();
+        if (interactable == null)
+        {
+            interactable = slot.displayObject.AddComponent<RaycastInteractable>();
+            interactable.objectsToHighlight = new GameObject[] { slot.displayObject };
+            interactable.emissionIntensity = 0.3f;
+        }
+        interactable.enabled = true;
+
+        if (interactable.OnClick == null)
+            interactable.OnClick = new UnityEngine.Events.UnityEvent();
+        interactable.OnClick.RemoveAllListeners();
+        TableSlot capturedSlot = slot;
+        interactable.OnClick.AddListener(() => GrabFromSlot(capturedSlot));
+
+        SetupVRClickable(slot.displayObject, () => GrabFromSlot(capturedSlot));
     }
 
     void GrabFromSlot(TableSlot slot)
@@ -383,6 +422,7 @@ public class AssemblyTable : MonoBehaviour
 
     public void ResetTable()
     {
+        nextSlotIndex = 0;
         foreach (TableSlot slot in slots)
         {
             if (slot.displayObject != null)
