@@ -15,7 +15,7 @@ public class AssemblyTable : MonoBehaviour
     public TableSlot[] slots;
 
     public bool enforceOrder = false;
-    public int wrongOrderSoundIndex = 2;
+    public AudioClip wrongOrderClip;
     private int nextSlotIndex = 0;
 
     [Header("Snap Mode Settings")]
@@ -87,47 +87,18 @@ public class AssemblyTable : MonoBehaviour
                 foreach (TableSlot s in slots)
                     if (other.CompareTag(s.acceptedTag)) { isAnySlotTag = true; break; }
 
-                if (isAnySlotTag && GameManager.Instance != null)
-                    GameManager.Instance.PlaySound(wrongOrderSoundIndex);
+                if (isAnySlotTag)
+                    if (wrongOrderClip != null && AudioManager.Instance != null)
+                        AudioManager.Instance.PlayClip(wrongOrderClip, placementVolume);
+
+
                 return;
             }
 
             Debug.Log("Item placed on table (ordered): " + nextSlot.acceptedTag);
-            if (GameManager.Instance != null) GameManager.Instance.PlaySound(1);
+            if (placementClip != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlayClip(placementClip, placementVolume);
 
-            ForceReleaseXR(other.gameObject);
-            Destroy(other.gameObject);
-
-            nextSlot.isFilled = true;
-            nextSlotIndex++;
-
-            ActivateSlotDisplay(nextSlot);
-        }
-        else
-        {
-            foreach (TableSlot slot in slots)
-            {
-                if (slot.isFilled) continue;
-        if (enforceOrder)
-        {
-            // Only accept the next expected slot in sequence
-            if (nextSlotIndex >= slots.Length) return;
-
-            TableSlot nextSlot = slots[nextSlotIndex];
-            if (!other.CompareTag(nextSlot.acceptedTag))
-            {
-                // Check if it matches any slot at all — if so, it's out of order
-                bool isAnySlotTag = false;
-                foreach (TableSlot s in slots)
-                    if (other.CompareTag(s.acceptedTag)) { isAnySlotTag = true; break; }
-
-                if (isAnySlotTag && GameManager.Instance != null)
-                    GameManager.Instance.PlaySound(wrongOrderSoundIndex);
-                return;
-            }
-
-            Debug.Log("Item placed on table (ordered): " + nextSlot.acceptedTag);
-            if (GameManager.Instance != null) GameManager.Instance.PlaySound(1);
 
             ForceReleaseXR(other.gameObject);
             Destroy(other.gameObject);
@@ -143,15 +114,13 @@ public class AssemblyTable : MonoBehaviour
             {
                 if (slot.isFilled) continue;
 
-            if (other.CompareTag(slot.acceptedTag))
-            {
-                Debug.Log("Item placed on table: " + slot.acceptedTag);
+                if (other.CompareTag(slot.acceptedTag))
+                {
+                    Debug.Log("Item placed on table: " + slot.acceptedTag);
 
-                if (placementClip != null && AudioManager.Instance != null)
-                    AudioManager.Instance.PlayClip(placementClip, placementVolume);
+                    if (placementClip != null && AudioManager.Instance != null)
+                        AudioManager.Instance.PlayClip(placementClip, placementVolume);
 
-                    ForceReleaseXR(other.gameObject);
-                    Destroy(other.gameObject);
                     ForceReleaseXR(other.gameObject);
                     Destroy(other.gameObject);
 
@@ -163,20 +132,7 @@ public class AssemblyTable : MonoBehaviour
         }
     }
 
-     void ActivateSlotDisplay(TableSlot slot)
-    {
-        if (slot.displayObject == null) return;
-
-        slot.displayObject.SetActive(true);
-                    slot.isFilled = true;
-                    ActivateSlotDisplay(slot);
-                    return;
-                }
-            }
-        }
-    }
-
-     void ActivateSlotDisplay(TableSlot slot)
+    void ActivateSlotDisplay(TableSlot slot)
     {
         if (slot.displayObject == null) return;
 
@@ -191,11 +147,6 @@ public class AssemblyTable : MonoBehaviour
         }
         interactable.enabled = true;
 
-        if (interactable.OnClick == null)
-            interactable.OnClick = new UnityEngine.Events.UnityEvent();
-        interactable.OnClick.RemoveAllListeners();
-        TableSlot capturedSlot = slot;
-        interactable.OnClick.AddListener(() => GrabFromSlot(capturedSlot));
         if (interactable.OnClick == null)
             interactable.OnClick = new UnityEngine.Events.UnityEvent();
         interactable.OnClick.RemoveAllListeners();
