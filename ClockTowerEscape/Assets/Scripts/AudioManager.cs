@@ -180,7 +180,10 @@ public class AudioManager : MonoBehaviour
 
         if (sfxSource != null)
         {
-            sfxSource.volume = Mathf.Clamp01(volume);
+            float clampedVolume = Mathf.Clamp01(volume);
+            bool shouldMute = clampedVolume <= 0f;
+            sfxSource.volume = clampedVolume;
+            sfxSource.mute = shouldMute;
         }
     }
 
@@ -190,7 +193,10 @@ public class AudioManager : MonoBehaviour
 
         if (musicSource != null)
         {
-            musicSource.volume = Mathf.Clamp01(volume);
+            float clampedVolume = Mathf.Clamp01(volume);
+            bool shouldMute = clampedVolume <= 0f;
+            musicSource.volume = clampedVolume;
+            musicSource.mute = shouldMute;
         }
     }
 }
