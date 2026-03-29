@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Scenes/ClockRoom.unity
     guid: 4ba33437aedab144cb313a0a488d51f0
   - enabled: 1
-    path: Assets/Scenes/ClockRoom_END.unity
+    path: Assets/Scenes/ArchivedScenes/ClockRoom_END_old.unity
     guid: 8b09567d5f31f9b4d8ada64dc6471636
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

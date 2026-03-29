@@ -25,33 +25,17 @@ public class GearPuzzleManager : MonoBehaviour
     public Transform chainTransform; // this is the chain that goes from the end gear down into the wall toward the elevator -> i made it so it spins like an axle rod
     public UnityEvent OnPuzzleSolved;
 
-    [Header("Gear Launch Settings")]
-    public float launchForce = 3f;
-    public float launchUpward = 2f;
+    public bool startSolved = false;
 
     int connectedCount = 1;
     bool puzzleSolved = false;
 
-    // when the scene starts I find all the loose gears on the floor, move them up onto the wall near the slots,
-    // then launch them off so it looks like the mechanism just broke and gears went flying everywhere
     void Start()
     {
-        GameObject[] gearObjects = GameObject.FindGameObjectsWithTag("Gear");
-        foreach (GameObject gearObj in gearObjects)
+        if (startSolved)
         {
-            Rigidbody rb = gearObj.GetComponent<Rigidbody>();
-            if (rb == null) continue;
-
-            // I pick a random spot on the wall near the pegs to launch from, somewhere between the slots
-            float randX = Random.Range(-0.5f, 1.5f);
-            float randY = Random.Range(1.5f, 4.0f);
-            Vector3 wallPos = transform.position + new Vector3(randX + 2.5f, randY, -10f);
-            gearObj.transform.position = wallPos;
-
-            // launch it away from the wall with some upward force so it tumbles and scatters
-            Vector3 launchDir = new Vector3(Random.Range(-0.5f, 0.5f), launchUpward, Random.Range(1f, 2f)).normalized;
-            rb.AddForce(launchDir * launchForce, ForceMode.Impulse);
-            rb.AddTorque(Random.insideUnitSphere * 2f, ForceMode.Impulse);
+            connectedCount = allGears.Length;
+            puzzleSolved = true;
         }
     }
 

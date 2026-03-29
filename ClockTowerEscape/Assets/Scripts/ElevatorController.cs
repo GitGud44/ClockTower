@@ -58,6 +58,9 @@ public class ElevatorController : MonoBehaviour
             new GameObject("SceneFadeManager").AddComponent<SceneFadeManager>();
 
         isUnlocked = !startsLocked;
+
+        if (isUnlocked)
+            StartCoroutine(OpenDoorsSequence());
     }
 
     //public API
