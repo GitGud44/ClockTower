@@ -1,10 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StartMenu : MonoBehaviour
 {
+    private const float AudioSliderMaxValue = 10f;
+
     public GameObject mainPanel;
     public GameObject settingsPanel;
 
@@ -57,25 +60,31 @@ public class StartMenu : MonoBehaviour
 
     private void LoadVolumeSettings()
     {
-        float sfxVolume = SettingsState.GetSfxVolume();
-        float musicVolume = SettingsState.GetMusicVolume();
+        float savedSfxVolume = SettingsState.GetSfxVolume();
+        float savedMusicVolume = SettingsState.GetMusicVolume();
+        float sfxSliderValue = Mathf.Clamp01(savedSfxVolume) * AudioSliderMaxValue;
+        float musicSliderValue = Mathf.Clamp01(savedMusicVolume) * AudioSliderMaxValue;
 
-        if (sfxVolumeSlider != null)
-        {
-            sfxVolumeSlider.SetValueWithoutNotify(sfxVolume);
-            sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
-        }
+        ConfigureAudioSlider(sfxVolumeSlider, SetSFXVolume, sfxSliderValue);
+        ConfigureAudioSlider(musicVolumeSlider, SetMusicVolume, musicSliderValue);
 
-        if (musicVolumeSlider != null)
-        {
-            musicVolumeSlider.SetValueWithoutNotify(musicVolume);
-            musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
-        }
-
-        SetSFXVolume(sfxVolume);
-        SetMusicVolume(musicVolume);
+        SetSFXVolume(sfxSliderValue);
+        SetMusicVolume(musicSliderValue);
 
         LoadAccessibilitySettings();
+    }
+
+    private void ConfigureAudioSlider(Slider slider, UnityAction<float> listener, float value)
+    {
+        if (slider == null)
+            return;
+
+        slider.onValueChanged.RemoveListener(listener);
+        slider.wholeNumbers = false;
+        slider.minValue = 0f;
+        slider.maxValue = AudioSliderMaxValue;
+        slider.SetValueWithoutNotify(Mathf.Clamp(value, slider.minValue, slider.maxValue));
+        slider.onValueChanged.AddListener(listener);
     }
 
     private void LoadAccessibilitySettings()
@@ -155,12 +164,14 @@ public class StartMenu : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
-        SettingsState.SetSfxVolume(volume);
+        float normalizedVolume = Mathf.Clamp01(volume / AudioSliderMaxValue);
+        SettingsState.SetSfxVolume(normalizedVolume);
     }
 
     public void SetMusicVolume(float volume)
     {
-        SettingsState.SetMusicVolume(volume);
+        float normalizedVolume = Mathf.Clamp01(volume / AudioSliderMaxValue);
+        SettingsState.SetMusicVolume(normalizedVolume);
     }
 
     private void ApplyLocomotionMode(bool useTeleport, bool save)
