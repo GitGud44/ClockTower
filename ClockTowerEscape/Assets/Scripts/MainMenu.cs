@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    private const float AudioSliderMaxValue = 10f;
+
     public GameObject mainMenuPanel;
     public GameObject accessibilityMenuPanel;
     public Slider sfxVolumeSlider;
@@ -13,12 +16,6 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         menuToggle = FindFirstObjectByType<MenuToggle>();
-
-        if (sfxVolumeSlider != null)
-            sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
-
-        if (musicVolumeSlider != null)
-            musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
 
         RefreshAudioSettings();
     }
@@ -45,12 +42,14 @@ public class MainMenu : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
-        SettingsState.SetSfxVolume(volume);
+        float normalizedVolume = Mathf.Clamp01(volume / AudioSliderMaxValue);
+        SettingsState.SetSfxVolume(normalizedVolume);
     }
 
     public void SetMusicVolume(float volume)
     {
-        SettingsState.SetMusicVolume(volume);
+        float normalizedVolume = Mathf.Clamp01(volume / AudioSliderMaxValue);
+        SettingsState.SetMusicVolume(normalizedVolume);
     }
 
     public void QuitGame()
@@ -64,15 +63,27 @@ public class MainMenu : MonoBehaviour
 
     private void RefreshAudioSettings()
     {
-        float sfxVolume = SettingsState.GetSfxVolume();
-        float musicVolume = SettingsState.GetMusicVolume();
+        float savedSfxVolume = SettingsState.GetSfxVolume();
+        float savedMusicVolume = SettingsState.GetMusicVolume();
+        float sfxSliderValue = Mathf.Clamp01(savedSfxVolume) * AudioSliderMaxValue;
+        float musicSliderValue = Mathf.Clamp01(savedMusicVolume) * AudioSliderMaxValue;
 
-        if (sfxVolumeSlider != null)
-            sfxVolumeSlider.SetValueWithoutNotify(sfxVolume);
-
-        if (musicVolumeSlider != null)
-            musicVolumeSlider.SetValueWithoutNotify(musicVolume);
+        ConfigureAudioSlider(sfxVolumeSlider, SetSFXVolume, sfxSliderValue);
+        ConfigureAudioSlider(musicVolumeSlider, SetMusicVolume, musicSliderValue);
 
         SettingsState.ApplyRuntimeSettings();
+    }
+
+    private void ConfigureAudioSlider(Slider slider, UnityAction<float> listener, float value)
+    {
+        if (slider == null)
+            return;
+
+        slider.onValueChanged.RemoveListener(listener);
+        slider.wholeNumbers = false;
+        slider.minValue = 0f;
+        slider.maxValue = AudioSliderMaxValue;
+        slider.SetValueWithoutNotify(Mathf.Clamp(value, slider.minValue, slider.maxValue));
+        slider.onValueChanged.AddListener(listener);
     }
 }
