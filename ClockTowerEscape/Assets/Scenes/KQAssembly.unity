@@ -8192,7 +8192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21e2591d89b3b6e40873378a00872f20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupSoundIndex: 4
   pickupClip: {fileID: 0}
   pickupVolume: 1
 --- !u!114 &683844334
@@ -8357,6 +8356,11 @@ MonoBehaviour:
   followSpeed: 10
   maxSpeed: 5
   holdOffset: {x: 0, y: 0, z: 0}
+  holdEulerOffset: {x: 0, y: 0, z: 0}
+  heldScaleMultiplier: 1
+  disableCollidersWhileHeld: 1
+  keepAboveSurfacesWhenReleased: 0
+  releasedSurfacePadding: 0.01
 --- !u!54 &683844337
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -26443,6 +26447,85 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4068373912626513877, guid: 86be70b0a290d444998b7386bfe83652, type: 3}
+--- !u!1001 &1390461739
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.342
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.457
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.9237666
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.054873914
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.020068455
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9375585
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.3428853
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 40.177
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -186.699
+      objectReference: {fileID: 0}
+    - target: {fileID: 4583569928359577572, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7720615740246007573, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: m_Name
+      value: HintBook
+      objectReference: {fileID: 0}
+    - target: {fileID: 7792464080360205705, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: leftCollider
+      value: 
+      objectReference: {fileID: 1390461740}
+    - target: {fileID: 7792464080360205705, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: pageFlipClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 823a02717d335447e8e4aca2096870cb, type: 3}
+    - target: {fileID: 7792464080360205705, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+      propertyPath: rightCollider
+      value: 
+      objectReference: {fileID: 1390461741}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+--- !u!65 &1390461740 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 9039686458788000452, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+  m_PrefabInstance: {fileID: 1390461739}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1390461741 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 8438024896061728518, guid: 5cadc84762b7a44ed9d654c48b7fc28b, type: 3}
+  m_PrefabInstance: {fileID: 1390461739}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1398030087
 GameObject:
   m_ObjectHideFlags: 0
@@ -46336,7 +46419,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &7095999791223774397
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -48324,7 +48407,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21e2591d89b3b6e40873378a00872f20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupSoundIndex: 4
   pickupClip: {fileID: 8300000, guid: 4d4778de9faf347dbb7347c798b00d37, type: 3}
   pickupVolume: 1
 --- !u!114 &8738100235544769186
@@ -48489,6 +48571,11 @@ MonoBehaviour:
   followSpeed: 10
   maxSpeed: 5
   holdOffset: {x: 0, y: 0, z: 0}
+  holdEulerOffset: {x: 0, y: 0, z: 0}
+  heldScaleMultiplier: 1
+  disableCollidersWhileHeld: 1
+  keepAboveSurfacesWhenReleased: 0
+  releasedSurfacePadding: 0.01
 --- !u!54 &8738100235544769189
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -49054,9 +49141,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6309cb8d8238e9243a3cc284e966b623, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pageFlipSoundIndex: 3
   pageFlipClip: {fileID: 8300000, guid: 823a02717d335447e8e4aca2096870cb, type: 3}
   pageFlipVolume: 1
+  pageObjects: []
+  liftHeight: 0.1
+  stackBaseY: 0
+  pageStackStep: 0.005
+  liftSpeed: 1
+  flipSpeed: 180
+  dropSpeed: 1
+  rightCollider: {fileID: 0}
+  leftCollider: {fileID: 0}
 --- !u!114 &9080979798742635465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49235,3 +49330,4 @@ SceneRoots:
   - {fileID: 1374622431134466254}
   - {fileID: 1269387436}
   - {fileID: 1917716169}
+  - {fileID: 1390461739}

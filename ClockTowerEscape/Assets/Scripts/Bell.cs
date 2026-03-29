@@ -20,7 +20,7 @@ public class Bell : MonoBehaviour
     public AudioClip bellSound;
     [Tooltip("Volume multiplier for bell ring playback.")]
     [Range(0f, 1f)]
-    public float bellVolume = 1f;
+    public float bellVolume = 3f;
     private Quaternion initialRotation;
     private Coroutine ringRoutine;
 
