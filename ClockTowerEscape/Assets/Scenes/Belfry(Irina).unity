@@ -2134,7 +2134,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 228508901521010452, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: nextSceneName
-      value: ClockRoom_Nico
+      value: ClockRoom_END
       objectReference: {fileID: 0}
     - target: {fileID: 553707956675793919, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: m_LightProbeUsage
