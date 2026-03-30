@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ClockRoom_END.unity
     guid: 66aa9c0d9c48c9749b36ab4a28de2fff
+  - enabled: 1
+    path: Assets/Scenes/BelfryCompletedPuzzle.unity
+    guid: 7b48640c0ed054cd184dd4bdfa5d6f90
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 246fb37ed75698543ac14b7e89f37619, type: 2}

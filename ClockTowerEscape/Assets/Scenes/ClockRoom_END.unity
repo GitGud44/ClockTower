@@ -1815,7 +1815,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &820846963
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2170,6 +2170,75 @@ MonoBehaviour:
   disableCollidersWhileHeld: 1
   keepAboveSurfacesWhenReleased: 0
   releasedSurfacePadding: 0.01
+--- !u!1001 &842401664
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2755018760329673795, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_Name
+      value: Clock Puzzle
+      objectReference: {fileID: 0}
+    - target: {fileID: 3648310083173653497, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: solutionHour
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3648310083173653497, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: nextSceneName
+      value: StartMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3648310083173653497, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: solutionMinutesOnes
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 13.91
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.0068994747
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9999762
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -180.791
+      objectReference: {fileID: 0}
+    - target: {fileID: 5710321441144067378, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
 --- !u!1001 &872642234
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2636,7 +2705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 228508901521010452, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: nextSceneName
-      value: Belfry(Irina)
+      value: BelfryCompletedPuzzle
       objectReference: {fileID: 0}
     - target: {fileID: 228508901521010452, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: doorSlideDuration
@@ -4676,6 +4745,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -6.43
       objectReference: {fileID: 0}
+    - target: {fileID: 3537484014786103891, guid: d794360cdc0adf64195f6170ab1eb782, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4068908121642452095, guid: d794360cdc0adf64195f6170ab1eb782, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -4712,6 +4785,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 2.49
       objectReference: {fileID: 0}
+    - target: {fileID: 6065872512633984628, guid: d794360cdc0adf64195f6170ab1eb782, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6373675160300001076, guid: d794360cdc0adf64195f6170ab1eb782, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -4740,6 +4817,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 6855267105337078614, guid: d794360cdc0adf64195f6170ab1eb782, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7e6c974c2d45845e28a5df3d01b370eb, type: 2}
     - target: {fileID: 6891407531801197988, guid: d794360cdc0adf64195f6170ab1eb782, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.98
@@ -5825,3 +5906,4 @@ SceneRoots:
   - {fileID: 1371104880}
   - {fileID: 820846966}
   - {fileID: 380861602}
+  - {fileID: 842401664}
