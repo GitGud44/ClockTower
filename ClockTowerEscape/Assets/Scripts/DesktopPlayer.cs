@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -85,16 +86,17 @@ public class DesktopPlayer : MonoBehaviour
         {
             RaycastInteractable target = hitPlacedGear ? null : hit.collider.GetComponentInParent<RaycastInteractable>();
 
-            // started looking at something new
+            
             if (target != null && target != lastTarget)
             {
+                // started looking at something new
                 if (lastTarget != null) lastTarget.GazeExit();
                 target.GazeEnter();
                 lastTarget = target;
             }
-            // stopped looking at it, hit something else
             else if (target == null && lastTarget != null)
             {
+                // stopped looking at it, hit something else
                 lastTarget.GazeExit();
                 lastTarget = null;
             }
@@ -270,5 +272,46 @@ public class DesktopPlayer : MonoBehaviour
         // lock cursor when this player gets enabled
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    // if any grabbable object falls way below the player it went out of bounds somehow (through a wall or
+    // through the floor), I just teleport it back near the player. same idea as VRInteractionBridge does
+    // for VR mode but this catches desktop grabbables too
+    void LateUpdate()
+    {
+        float playerY = transform.position.y;
+        DesktopGrabbable[] allGrabbables = FindObjectsByType<DesktopGrabbable>(FindObjectsSortMode.None);
+
+        for (int i = 0; i < allGrabbables.Length; i++)
+        {
+            if (allGrabbables[i].transform.position.y < playerY - 10f)
+            {
+                Transform obj = allGrabbables[i].transform;
+                obj.position = transform.position + Vector3.up * 0.5f;
+
+                Rigidbody rb = obj.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.isKinematic = true;
+                    rb.linearVelocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    StartCoroutine(RestorePhysicsNextFrame(rb));
+                }
+
+                Debug.Log($"[DesktopPlayer] '{obj.name}' fell out of bounds, teleported back to player");
+            }
+        }
+    }
+
+    IEnumerator RestorePhysicsNextFrame(Rigidbody rb)
+    {
+        yield return null;
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
     }
 }

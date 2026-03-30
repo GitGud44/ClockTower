@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.XR.CoreUtils;
 
 public class GameManager : MonoBehaviour
 {
@@ -62,7 +63,17 @@ public class GameManager : MonoBehaviour
         if (characterController != null)
             characterController.enabled = false;
 
-        activePlayer.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+        // The XR Origin needs MoveCameraToWorldLocation in order to account for the tracked headset offset, this is for the VR player
+        XROrigin xrOrigin = activePlayer.GetComponent<XROrigin>();
+        if (xrOrigin != null)
+        {
+            xrOrigin.MoveCameraToWorldLocation(spawnPoint.position);
+            activePlayer.transform.rotation = spawnPoint.rotation;
+        }
+        else
+        {
+            activePlayer.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+        }
 
         if (characterController != null)
         {
@@ -96,13 +107,17 @@ public class GameManager : MonoBehaviour
             if (desktopPlayers.Length > 0)
                 return desktopPlayers[0].gameObject;
         }
+        else if (CurrentPlayMode == PlayMode.VR)
+        {
+            var vrPlayer = GameObject.Find("VRPlayer");
+            if (vrPlayer != null)
+                return vrPlayer;
+        }
 
         return null;
     }
 
-    /// <summary>
-    /// Starts background music by delegating to AudioManager
-    /// </summary>
+    // Start the background music by using the to AudioManager singleton instance (theres only one in the scene easy to get from anywhere)
     public void StartMusic()
     {
         if (AudioManager.Instance != null)

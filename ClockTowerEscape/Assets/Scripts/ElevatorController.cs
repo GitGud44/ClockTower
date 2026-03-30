@@ -4,41 +4,29 @@ using UnityEngine.SceneManagement;
 
 public class ElevatorController : MonoBehaviour
 {
-    [Header("Door Transforms")]
     public Transform outerDoorLeft;
     public Transform outerDoorRight;
     public Transform innerDoorLeft;
     public Transform innerDoorRight;
 
-    [Header("Door Open Offsets")]
-    [Tooltip("Amount each door slides from their starting positions when the elevator opens")]
     public Vector3 outerLeftOpenOffset  = new Vector3(1f, 0f, 0f);
     public Vector3 outerRightOpenOffset = new Vector3(-1f, 0f, 0f);
     public Vector3 innerLeftOpenOffset  = new Vector3(0.86f, 0f, 0f);
     public Vector3 innerRightOpenOffset = new Vector3(-0.86f, 0f, 0f);
 
-    [Header("Door Animation")]
-    public float doorSlideDuration     = 1.5f;
+    public float doorSlideDuration = 1.5f;
     public float delayBetweenDoorPairs = 0.5f;
 
-    [Header("Scene Transition")]
-    [Tooltip("Scene name as it appears in Build Settings")]
     public string nextSceneName;
-    [Tooltip("Optional local clip for the elevator ding.")]
     public AudioClip dingSoundClip;
-    [Range(0f, 1f)]
+
     public float dingVolume = 1f;
     public float fadeOutDuration = 1.5f;
 
-    [Header("Player Detection")]
-    [Tooltip("Tag on the player collider")]
     public string playerTag = "Player";
 
-    [Header("State")]
-    [Tooltip("If true, the doors start locked. Call UnlockAndOpenDoors() to open them")]
     public bool startsLocked = true;
 
-   //store initial closed positions
     private Vector3 outerLeftClosed, outerRightClosed;
     private Vector3 innerLeftClosed, innerRightClosed;
 
@@ -53,7 +41,6 @@ public class ElevatorController : MonoBehaviour
         if (innerDoorLeft)  innerLeftClosed  = innerDoorLeft.localPosition;
         if (innerDoorRight) innerRightClosed = innerDoorRight.localPosition;
 
-        //Make sure a SceneFadeManager exists in the scene
         if (SceneFadeManager.Instance == null)
             new GameObject("SceneFadeManager").AddComponent<SceneFadeManager>();
 
@@ -63,9 +50,6 @@ public class ElevatorController : MonoBehaviour
             StartCoroutine(OpenDoorsSequence());
     }
 
-    //public API
-    //connect to specific unlock event (eg. Bell.OnRingComplete unlocks elevator when the bell code is fully rung)
-
     public void UnlockAndOpenDoors()
     {
         if (isUnlocked) return;
@@ -73,18 +57,17 @@ public class ElevatorController : MonoBehaviour
         StartCoroutine(OpenDoorsSequence());
     }
 
-    //Door animation
-
+    //The Door animation
     private IEnumerator OpenDoorsSequence()
     {
-        //outer doors slide open
+        //outer doors open
         yield return StartCoroutine(SlideDoorPair(
             outerDoorLeft,  outerLeftClosed,  outerLeftClosed  + outerLeftOpenOffset,
             outerDoorRight, outerRightClosed, outerRightClosed + outerRightOpenOffset));
 
         yield return new WaitForSeconds(delayBetweenDoorPairs);
 
-        //inner doors slide open
+        //inner doors open
         yield return StartCoroutine(SlideDoorPair(
             innerDoorLeft,  innerLeftClosed,  innerLeftClosed  + innerLeftOpenOffset,
             innerDoorRight, innerRightClosed, innerRightClosed + innerRightOpenOffset));
@@ -109,13 +92,13 @@ public class ElevatorController : MonoBehaviour
         if (b) b.localPosition = toB;
     }
 
-    //Player detection
+
     private void OnTriggerEnter(Collider other)
     {
         if (!doorsOpen || isTransitioning) return;
 
-        bool isPlayer = other.CompareTag(playerTag)
-                     || other.GetComponent<DesktopPlayer>() != null;
+        // Here added this for the VR player, it was working for desktop player but the VR player needs to get the player from the Tag, otherwise would walk in elevator and not do anything for VR
+        bool isPlayer = other.CompareTag(playerTag) || other.GetComponent<DesktopPlayer>() != null || other.GetComponentInParent<Unity.XR.CoreUtils.XROrigin>() != null;
 
         if (isPlayer)
         {
@@ -134,7 +117,7 @@ public class ElevatorController : MonoBehaviour
         if (fm != null)
             yield return StartCoroutine(fm.FadeOut(fadeOutDuration));
 
-        //play ding and dont destroy GameManager in the next scene
+        //play ding
         if (GameManager.Instance != null)
         {
             if (dingSoundClip != null && AudioManager.Instance != null)
@@ -143,11 +126,8 @@ public class ElevatorController : MonoBehaviour
             DontDestroyOnLoad(GameManager.Instance.gameObject);
         }
 
-        //brief pause so the ding has a moment to play
         yield return new WaitForSecondsRealtime(0.5f);
-
-        //Load next scene
-        //SceneFadeManager (DontDestroyOnLoad) automatically fades back in
+        // next scene
         SceneManager.LoadScene(nextSceneName);
     }
 }
