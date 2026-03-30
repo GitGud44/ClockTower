@@ -1,14 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class MenuToggle : MonoBehaviour
 {
     public GameObject UIMenu;
     bool isMenuOpen = false;
+    public InputActionReference vrMenuAction;
     void Start()
     {
         UIMenu.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        if (vrMenuAction != null)
+        {
+            vrMenuAction.action.performed += OnVrMenuPerformed;
+            vrMenuAction.action.Enable();
+        }
+    }
+
+    void OnDisable()
+    {
+        if (vrMenuAction != null)
+        {
+            vrMenuAction.action.performed -= OnVrMenuPerformed;
+            vrMenuAction.action.Disable();
+        }
     }
 
     // Update is called once per frame
@@ -16,11 +36,24 @@ public class MenuToggle : MonoBehaviour
     {
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            isMenuOpen = !isMenuOpen;
-            UIMenu.SetActive(isMenuOpen);
-            UpdateCursorState();
-            UpdateGamePause();
+            ToggleMenuState();
         }
+    }
+
+    private void OnVrMenuPerformed(InputAction.CallbackContext ctx)
+    {
+        if (GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR)
+        {
+            ToggleMenuState();
+        }
+    }
+
+    private void ToggleMenuState()
+    {
+        isMenuOpen = !isMenuOpen;
+        UIMenu.SetActive(isMenuOpen);
+        UpdateCursorState();
+        UpdateGamePause();
     }
 
     public void CloseMenu()

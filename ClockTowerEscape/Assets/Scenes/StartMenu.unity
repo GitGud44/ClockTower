@@ -8620,6 +8620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIMenu: {fileID: 1346610558}
+  vrMenuAction: {fileID: 3153656300620571457, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!1 &731845595
 GameObject:
   m_ObjectHideFlags: 0
@@ -24049,6 +24050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIMenu: {fileID: 584984032722983572}
+  vrMenuAction: {fileID: 0}
 --- !u!222 &7540375203409134792
 CanvasRenderer:
   m_ObjectHideFlags: 0
