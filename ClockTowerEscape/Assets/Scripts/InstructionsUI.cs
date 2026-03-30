@@ -6,6 +6,7 @@ public class InstructionsUI : MonoBehaviour
     public Canvas canvas;
     public GameManager.PlayMode canvasMode = GameManager.PlayMode.Desktop;
     private bool isOpen = true;
+    private InputAction triggerAction;
 
     void Awake()
     {
@@ -27,8 +28,20 @@ public class InstructionsUI : MonoBehaviour
             return;
         }
 
+        if (canvasMode == GameManager.PlayMode.VR)
+        {
+            triggerAction = new InputAction("VRTrigger", InputActionType.Button);
+            triggerAction.AddBinding("<XRController>{RightHand}/triggerPressed");
+            triggerAction.Enable();
+        }
+
         canvas.enabled = true;
         OpenInstructions();
+    }
+
+    void OnDestroy()
+    {
+        triggerAction?.Dispose();
     }
 
     void Update()
@@ -44,9 +57,7 @@ public class InstructionsUI : MonoBehaviour
         }
         else if (GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR)
         {
-            var rightTrigger = Gamepad.current?.rightTrigger;
-            
-            if (rightTrigger != null && rightTrigger.wasPressedThisFrame)
+            if (triggerAction != null && triggerAction.WasPressedThisFrame())
             {
                 CloseInstructions();
             }
