@@ -6,11 +6,9 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
-    [Header("Audio Sources")]
     public AudioSource sfxSource;
     public AudioSource musicSource;
 
-    [Header("Music Clips")]
     public AudioClip backgroundMusic;
     public bool playMusicOnAwake = true;
 
@@ -182,7 +180,11 @@ public class AudioManager : MonoBehaviour
         {
             float clampedVolume = Mathf.Clamp01(volume);
             bool shouldMute = clampedVolume <= 0f;
-            sfxSource.volume = clampedVolume;
+            // logarithmic volume so the slider feels natural instead of linear
+            // based on Mathf.Log10(slider) * 20 formula from https://www.youtube.com/watch?v=xNHSGMKtlv4
+            // but that formula is for AudioMixer decibels, since I'm setting audioSource.volume directly (0-1 range)
+            // I use a power curve which does the same thing: makes the slider feel even across the whole range
+            sfxSource.volume = clampedVolume * clampedVolume;
             sfxSource.mute = shouldMute;
         }
     }
@@ -195,7 +197,8 @@ public class AudioManager : MonoBehaviour
         {
             float clampedVolume = Mathf.Clamp01(volume);
             bool shouldMute = clampedVolume <= 0f;
-            musicSource.volume = clampedVolume;
+            // same logarithmic curve as SFX, from the video
+            musicSource.volume = clampedVolume * clampedVolume;
             musicSource.mute = shouldMute;
         }
     }

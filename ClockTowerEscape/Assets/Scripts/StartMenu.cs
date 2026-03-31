@@ -10,6 +10,7 @@ public class StartMenu : MonoBehaviour
 
     public GameObject mainPanel;
     public GameObject settingsPanel;
+    public GameObject vrSettingsPanel;
 
     public string firstSceneName = "MainScene";
     public float fadeOutDuration = 1.5f;
@@ -27,6 +28,11 @@ public class StartMenu : MonoBehaviour
     public Toggle continuousTurnToggle;
     public Slider speedSlider;
     public Slider sensitivitySlider;
+
+    public Toggle vrTeleportToggle;
+    public Toggle vrMoveToggle;
+    public Toggle vrSnapTurnToggle;
+    public Toggle vrContinuousTurnToggle;
 
     private bool isTransitioning = false;
 
@@ -54,6 +60,7 @@ public class StartMenu : MonoBehaviour
 
         if (mainPanel != null) mainPanel.SetActive(true);
         if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (vrSettingsPanel != null) vrSettingsPanel.SetActive(false);
 
         LoadVolumeSettings();
     }
@@ -97,6 +104,16 @@ public class StartMenu : MonoBehaviour
             snapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
         if (continuousTurnToggle != null)
             continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
+
+        // same listeners for the VR settings panel toggles so they actually do something
+        if (vrTeleportToggle != null)
+            vrTeleportToggle.onValueChanged.AddListener(OnTeleportToggleChanged);
+        if (vrMoveToggle != null)
+            vrMoveToggle.onValueChanged.AddListener(OnMoveToggleChanged);
+        if (vrSnapTurnToggle != null)
+            vrSnapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
+        if (vrContinuousTurnToggle != null)
+            vrContinuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
 
         bool useTeleport = SettingsState.GetUseTeleport();
         bool useContinuousTurn = SettingsState.GetUseContinuousTurn();
@@ -142,14 +159,22 @@ public class StartMenu : MonoBehaviour
         StartCoroutine(StartGameWithFade());
     }
 
+    // I check if we're in VR mode and open the VR settings panel instead of the desktop one,
+    // the VR one is on a world space canvas so the ray interactor can actually hit the sliders
     public void OpenSettings()
     {
-        if (settingsPanel != null) settingsPanel.SetActive(true);
+        bool isVR = GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR;
+
+        if (isVR && vrSettingsPanel != null)
+            vrSettingsPanel.SetActive(true);
+        else if (settingsPanel != null)
+            settingsPanel.SetActive(true);
     }
 
     public void CloseSettings()
     {
         if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (vrSettingsPanel != null) vrSettingsPanel.SetActive(false);
     }
 
     public void QuitGame()
@@ -178,6 +203,8 @@ public class StartMenu : MonoBehaviour
     {
         if (teleportToggle != null) teleportToggle.SetIsOnWithoutNotify(useTeleport);
         if (moveToggle != null) moveToggle.SetIsOnWithoutNotify(!useTeleport);
+        if (vrTeleportToggle != null) vrTeleportToggle.SetIsOnWithoutNotify(useTeleport);
+        if (vrMoveToggle != null) vrMoveToggle.SetIsOnWithoutNotify(!useTeleport);
 
         if (teleport != null) teleport.SetActive(useTeleport);
         if (move != null) move.SetActive(!useTeleport);
@@ -192,6 +219,8 @@ public class StartMenu : MonoBehaviour
     {
         if (continuousTurnToggle != null) continuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
         if (snapTurnToggle != null) snapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
+        if (vrContinuousTurnToggle != null) vrContinuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
+        if (vrSnapTurnToggle != null) vrSnapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
 
         if (continuousTurn != null) continuousTurn.SetActive(useContinuousTurn);
         if (snapTurn != null) snapTurn.SetActive(!useContinuousTurn);
