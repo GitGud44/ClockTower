@@ -25,7 +25,7 @@ public class end_scene : MonoBehaviour
     {
         SetupMode();
 
-        if (vr)
+        if (vr==true)
         {
             pages = vrPages;
         }
@@ -34,7 +34,7 @@ public class end_scene : MonoBehaviour
             pages = desktopPages;
         }
 
-        if (vr==True)
+        if (vr==true)
         {
             triggerAction = new InputAction(binding: "<XRController>/triggerPressed");
             triggerAction.Enable();
@@ -57,7 +57,7 @@ public class end_scene : MonoBehaviour
     {
         vr = GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR;
 
-        if (vr==True)
+        if (vr==true)
         {
             if (screenCanvas != null) 
             {
@@ -94,7 +94,7 @@ public class end_scene : MonoBehaviour
 
     bool Pressed()
     {
-        if (vr==True)
+        if (vr==true)
         {
             return triggerAction != null && triggerAction.WasPressedThisFrame();    
         }
