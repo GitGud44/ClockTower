@@ -1,19 +1,19 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// flip through canvas "pages" — only one active.
-// desktop: left click advances. VR: trigger button advances.
-// put this on an empty GameObject, drag each set of pages into the right list.
+//flip through pages
+// desktop left click and vr trigger
+// drag each page into the list 
 public class end_scene : MonoBehaviour
 {
-    [Header("Canvas for each mode")]
+
     public GameObject screenCanvas;
     public GameObject vrCanvas;
 
-    [Header("Desktop pages (drag page GameObjects here)")]
+
     public GameObject[] desktopPages;
 
-    [Header("VR pages (drag page GameObjects here)")]
+
     public GameObject[] vrPages;
 
     GameObject[] pages;
@@ -25,9 +25,16 @@ public class end_scene : MonoBehaviour
     {
         SetupMode();
 
-        pages = vr ? vrPages : desktopPages;
-
         if (vr)
+        {
+            pages = vrPages;
+        }
+        else
+        {
+            pages = desktopPages;
+        }
+
+        if (vr==True)
         {
             triggerAction = new InputAction(binding: "<XRController>/triggerPressed");
             triggerAction.Enable();
@@ -48,21 +55,35 @@ public class end_scene : MonoBehaviour
 
     void SetupMode()
     {
-        vr = GameManager.Instance != null &&
-             GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR;
+        vr = GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR;
 
-        if (vr)
+        if (vr==True)
         {
-            if (screenCanvas != null) screenCanvas.SetActive(false);
-            if (vrCanvas != null) vrCanvas.SetActive(true);
+            if (screenCanvas != null) 
+            {
+                screenCanvas.SetActive(false);
+            }
+            if (vrCanvas != null) 
+            {
+                vrCanvas.SetActive(true);
+            }
         }
         else
         {
-            if (screenCanvas != null) screenCanvas.SetActive(true);
-            if (vrCanvas != null) vrCanvas.SetActive(false);
+            if (screenCanvas != null) 
+            {
+                screenCanvas.SetActive(true);
+            }
+            if (vrCanvas != null)
+            {
+                vrCanvas.SetActive(false);
+            }
 
             var dp = FindFirstObjectByType<DesktopPlayer>(FindObjectsInactive.Include);
-            if (dp != null) dp.gameObject.SetActive(false);
+            if (dp != null)
+            {
+                dp.gameObject.SetActive(false);
+            }
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -73,18 +94,31 @@ public class end_scene : MonoBehaviour
 
     bool Pressed()
     {
-        if (vr)
-            return triggerAction != null && triggerAction.WasPressedThisFrame();
-
-        return Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+        if (vr==True)
+        {
+            return triggerAction != null && triggerAction.WasPressedThisFrame();    
+        }
+        else
+        {
+            return Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+        }
     }
 
     void Update()
     {
-        if (pages == null || pages.Length == 0) return;
-        if (!Pressed()) return;
+        if (pages == null || pages.Length == 0)
+        {
+            return;
+        } 
+        if (!Pressed()) 
+        {
+            return;
+        }
 
-        if (cur >= pages.Length - 1) return;
+        if (cur >= pages.Length - 1)
+        {
+            return;
+        } 
 
         cur++;
         Show();
@@ -92,11 +126,18 @@ public class end_scene : MonoBehaviour
 
     void Show()
     {
-        if (pages == null || pages.Length == 0) return;
+        if (pages == null || pages.Length == 0)
+        {
+            return;
+        }
 
         for (int i = 0; i < pages.Length; i++)
+        {
             if (pages[i] != null)
+            {
                 pages[i].SetActive(i == cur);
+            }
+        }
 
         Debug.Log("end scene: page " + (cur + 1) + " / " + pages.Length);
     }
