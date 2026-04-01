@@ -86,17 +86,16 @@ public class DesktopPlayer : MonoBehaviour
         {
             RaycastInteractable target = hitPlacedGear ? null : hit.collider.GetComponentInParent<RaycastInteractable>();
 
-            
+            // started looking at something new
             if (target != null && target != lastTarget)
             {
-                // started looking at something new
                 if (lastTarget != null) lastTarget.GazeExit();
                 target.GazeEnter();
                 lastTarget = target;
             }
+            // stopped looking at it, hit something else
             else if (target == null && lastTarget != null)
             {
-                // stopped looking at it, hit something else
                 lastTarget.GazeExit();
                 lastTarget = null;
             }
@@ -134,6 +133,13 @@ public class DesktopPlayer : MonoBehaviour
                 {
                     grabbable.Grab(holdPoint);
                     currentlyHeld = grabbable;
+
+                    if (grabbable.CompareTag("Gear"))
+                    {
+                        GearInfo gearInfo = grabbable.GetComponent<GearInfo>();
+                        if (gearInfo != null && gearInfo.pickupClip != null && AudioManager.Instance != null)
+                            AudioManager.Instance.PlaySpatialClip(gearInfo.pickupClip, grabbable.transform.position, gearInfo.pickupVolume, 1f);
+                    }
                 }
             }
         }

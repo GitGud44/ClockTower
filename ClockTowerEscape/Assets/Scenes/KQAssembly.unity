@@ -7581,11 +7581,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   correctOrder:
   - {fileID: 1208308061}
+  - {fileID: 537605199}
   - {fileID: 1004061509}
   - {fileID: 1587161019}
-  - {fileID: 537605199}
-  - {fileID: 1433039225}
   - {fileID: 800632340}
+  - {fileID: 1433039225}
   OnPuzzleSolved:
     m_PersistentCalls:
       m_Calls:
@@ -7601,7 +7601,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  successClip: {fileID: 8300000, guid: bad9aa084d8af4489b55ac725ed5b45b, type: 3}
   failClip: {fileID: 8300000, guid: 6a2420a661e63428db4fa8bdc7950a83, type: 3}
   puzzleSfxVolume: 1
 --- !u!1001 &606268577
@@ -25538,6 +25537,10 @@ PrefabInstance:
       propertyPath: nextSceneName
       value: ClockRoom
       objectReference: {fileID: 0}
+    - target: {fileID: 228508901521010452, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
+      propertyPath: openDoorsClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 768f7c7afd1f044919c5b345cb02d9eb, type: 3}
     - target: {fileID: 1939201566320388960, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.9273488

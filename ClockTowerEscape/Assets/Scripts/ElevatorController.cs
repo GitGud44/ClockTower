@@ -20,6 +20,11 @@ public class ElevatorController : MonoBehaviour
     public string nextSceneName;
     public AudioClip dingSoundClip;
 
+    [Header("Door SFX")]
+    public AudioClip openDoorsClip;
+    [Range(0f, 1f)]
+    public float openDoorsVolume = 1f;
+
     public float dingVolume = 1f;
     public float fadeOutDuration = 1.5f;
 
@@ -54,6 +59,10 @@ public class ElevatorController : MonoBehaviour
     {
         if (isUnlocked) return;
         isUnlocked = true;
+
+        if (openDoorsClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(openDoorsClip, transform.position, openDoorsVolume, 1f);
+
         StartCoroutine(OpenDoorsSequence());
     }
 

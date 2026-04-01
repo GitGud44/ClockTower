@@ -347,6 +347,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gearSize: 5
+  pickupClip: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
+  pickupVolume: 1
   currentSlot: {fileID: 0}
 --- !u!114 &20768862
 MonoBehaviour:
@@ -388,11 +390,6 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
-  holdEulerOffset: {x: 0, y: 0, z: 0}
-  heldScaleMultiplier: 1
-  disableCollidersWhileHeld: 1
-  keepAboveSurfacesWhenReleased: 0
-  releasedSurfacePadding: 0.01
 --- !u!54 &20768864
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1261,6 +1258,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gearSize: 2
+  pickupClip: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
+  pickupVolume: 1
   currentSlot: {fileID: 0}
 --- !u!114 &511260733
 MonoBehaviour:
@@ -1302,11 +1301,6 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
-  holdEulerOffset: {x: 0, y: 0, z: 0}
-  heldScaleMultiplier: 1
-  disableCollidersWhileHeld: 1
-  keepAboveSurfacesWhenReleased: 0
-  releasedSurfacePadding: 0.01
 --- !u!54 &511260735
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2361,6 +2355,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gearSize: 4
+  pickupClip: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
+  pickupVolume: 1
   currentSlot: {fileID: 0}
 --- !u!114 &723524652
 MonoBehaviour:
@@ -2402,11 +2398,6 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
-  holdEulerOffset: {x: 0, y: 0, z: 0}
-  heldScaleMultiplier: 1
-  disableCollidersWhileHeld: 1
-  keepAboveSurfacesWhenReleased: 0
-  releasedSurfacePadding: 0.01
 --- !u!54 &723524654
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2941,6 +2932,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gearSize: 7
+  pickupClip: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
+  pickupVolume: 1
   currentSlot: {fileID: 0}
 --- !u!114 &838834640
 MonoBehaviour:
@@ -2982,11 +2975,6 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
-  holdEulerOffset: {x: 0, y: 0, z: 0}
-  heldScaleMultiplier: 1
-  disableCollidersWhileHeld: 1
-  keepAboveSurfacesWhenReleased: 0
-  releasedSurfacePadding: 0.01
 --- !u!54 &838834642
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3578,6 +3566,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gearSize: 6
+  pickupClip: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
+  pickupVolume: 1
   currentSlot: {fileID: 0}
 --- !u!114 &1046007999
 MonoBehaviour:
@@ -3619,11 +3609,6 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
-  holdEulerOffset: {x: 0, y: 0, z: 0}
-  heldScaleMultiplier: 1
-  disableCollidersWhileHeld: 1
-  keepAboveSurfacesWhenReleased: 0
-  releasedSurfacePadding: 0.01
 --- !u!54 &1046008001
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3954,6 +3939,10 @@ PrefabInstance:
       propertyPath: nextSceneName
       value: Belfry(Irina)
       objectReference: {fileID: 0}
+    - target: {fileID: 228508901521010452, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
+      propertyPath: openDoorsClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 768f7c7afd1f044919c5b345cb02d9eb, type: 3}
     - target: {fileID: 1939201566320388960, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.67
@@ -4659,6 +4648,7 @@ GameObject:
   - component: {fileID: 1309585328}
   - component: {fileID: 1309585326}
   - component: {fileID: 1309585327}
+  - component: {fileID: 1309585332}
   m_Layer: 0
   m_Name: Axle_2_GearSlot_1
   m_TagString: Untagged
@@ -4680,6 +4670,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzleManager: {fileID: 1401659282}
   requiredGearSize: 2
+  placeClip: {fileID: 8300000, guid: 7450df261fed244259b4aa70555beebf, type: 3}
+  removeClip: {fileID: 8300000, guid: 4d4778de9faf347dbb7347c798b00d37, type: 3}
+  sfxVolume: 1
   isFilled: 0
   snappedGear: {fileID: 0}
   isCorrectGear: 0
@@ -4799,6 +4792,103 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1171729420}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1309585332
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309585325}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: e151cd940c18e43d29c51dd037306ced, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.302
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!64 &1318767342
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5032,6 +5122,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzleManager: {fileID: 1401659282}
   requiredGearSize: 4
+  placeClip: {fileID: 8300000, guid: 7450df261fed244259b4aa70555beebf, type: 3}
+  removeClip: {fileID: 8300000, guid: 4d4778de9faf347dbb7347c798b00d37, type: 3}
+  sfxVolume: 1
   isFilled: 0
   snappedGear: {fileID: 0}
   isCorrectGear: 0
@@ -5209,6 +5302,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  firstCorrectGearLoopSource: {fileID: 1309585332}
   startSolved: 0
 --- !u!4 &1401659283
 Transform:
@@ -6206,6 +6300,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gearSize: 3
+  pickupClip: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
+  pickupVolume: 1
   currentSlot: {fileID: 0}
 --- !u!114 &1717369166
 MonoBehaviour:
@@ -6247,11 +6343,6 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
-  holdEulerOffset: {x: 0, y: 0, z: 0}
-  heldScaleMultiplier: 1
-  disableCollidersWhileHeld: 1
-  keepAboveSurfacesWhenReleased: 0
-  releasedSurfacePadding: 0.01
 --- !u!54 &1717369168
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7423,6 +7514,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzleManager: {fileID: 1401659282}
   requiredGearSize: 7
+  placeClip: {fileID: 8300000, guid: 7450df261fed244259b4aa70555beebf, type: 3}
+  removeClip: {fileID: 8300000, guid: 4d4778de9faf347dbb7347c798b00d37, type: 3}
+  sfxVolume: 1
   isFilled: 0
   snappedGear: {fileID: 0}
   isCorrectGear: 0
@@ -7784,6 +7878,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gearSize: 1
+  pickupClip: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
+  pickupVolume: 1
   currentSlot: {fileID: 0}
 --- !u!114 &2028037523
 MonoBehaviour:
@@ -7825,11 +7921,6 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
-  holdEulerOffset: {x: 0, y: 0, z: 0}
-  heldScaleMultiplier: 1
-  disableCollidersWhileHeld: 1
-  keepAboveSurfacesWhenReleased: 0
-  releasedSurfacePadding: 0.01
 --- !u!54 &2028037525
 Rigidbody:
   m_ObjectHideFlags: 0

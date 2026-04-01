@@ -54,6 +54,10 @@ public class VRGearInteraction : MonoBehaviour
     void OnGrabbed(SelectEnterEventArgs args)
     {
         isHeld = true;
+
+        if (gearInfo != null && gearInfo.pickupClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(gearInfo.pickupClip, transform.position, gearInfo.pickupVolume, 1f);
+
         if (gearInfo != null && gearInfo.currentSlot != null)
         {
             gearInfo.currentSlot.RemoveGearVR();

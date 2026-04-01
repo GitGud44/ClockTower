@@ -14,8 +14,6 @@ public class LanternPuzzleManager : MonoBehaviour
     public UnityEvent OnPuzzleSolved;
 
     [Header("Local Audio Clips (Optional)")]
-    [Tooltip("If assigned, this plays for success")]
-    public AudioClip successClip;
     [Tooltip("If assigned, this plays for wrong order")]
     public AudioClip failClip;
     [Range(0f, 1f)]
@@ -80,8 +78,6 @@ public class LanternPuzzleManager : MonoBehaviour
 
     private void OpenElevatorDoor()
     {
-        PlaySuccessSound();
-
         // Trigger the elevator to unlock and open
         OnPuzzleSolved?.Invoke();
     }
@@ -92,9 +88,4 @@ public class LanternPuzzleManager : MonoBehaviour
             AudioManager.Instance.PlaySpatialClip(failClip, transform.position, puzzleSfxVolume, 1f);
     }
 
-    private void PlaySuccessSound()
-    {
-        if (successClip != null && AudioManager.Instance != null)
-            AudioManager.Instance.PlaySpatialClip(successClip, transform.position, puzzleSfxVolume, 1f);
-    }
 }
