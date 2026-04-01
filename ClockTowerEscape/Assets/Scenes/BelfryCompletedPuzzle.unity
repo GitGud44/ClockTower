@@ -712,6 +712,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8612512114633184509, guid: e512b8ac49047487f977f8fe3379cd6e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8f151a493d3e14571a8bd993568cb1af, type: 2}
     - target: {fileID: 9201526595888021218, guid: e512b8ac49047487f977f8fe3379cd6e, type: 3}
       propertyPath: m_Name
       value: BlueprintEasel
