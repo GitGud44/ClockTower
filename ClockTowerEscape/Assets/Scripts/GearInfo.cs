@@ -6,6 +6,11 @@ public class GearInfo : MonoBehaviour
 {
     public int gearSize = 1;
 
+    [Header("Audio")]
+    public AudioClip pickupClip;
+    [Range(0f, 1f)]
+    public float pickupVolume = 1f;
+
     // GearSlot sets this when the gear gets placed on a peg, its null when the gear is just loose on the ground
     [HideInInspector] public GearSlot currentSlot; // i dont want to show in inspector, but i still need to be accessible from other scripts so hide in inspector exists--an in between of private and public basically
 }

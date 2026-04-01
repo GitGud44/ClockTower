@@ -25,6 +25,9 @@ public class GearPuzzleManager : MonoBehaviour
     public Transform chainTransform; // this is the chain that goes from the end gear down into the wall toward the elevator -> i made it so it spins like an axle rod
     public UnityEvent OnPuzzleSolved;
 
+    [Header("First Correct Gear SFX (Optional)")]
+    public AudioSource firstCorrectGearLoopSource;
+
     public bool startSolved = false;
 
     int connectedCount = 1;
@@ -69,6 +72,21 @@ public class GearPuzzleManager : MonoBehaviour
         if (connectedCount > allGears.Length)
             connectedCount = allGears.Length;
 
+        if (firstCorrectGearLoopSource != null && slots != null && slots.Length > 0 && slots[0] != null)
+        {
+            bool shouldLoop = slots[0].isFilled && slots[0].isCorrectGear;
+            if (shouldLoop)
+            {
+                if (!firstCorrectGearLoopSource.isPlaying)
+                    firstCorrectGearLoopSource.Play();
+            }
+            else
+            {
+                if (firstCorrectGearLoopSource.isPlaying)
+                    firstCorrectGearLoopSource.Stop();
+            }
+        }
+
         // if the chain reaches all the way to the end gear thats the puzzle solved
         if (connectedCount >= allGears.Length && !puzzleSolved)
         {
@@ -105,6 +123,12 @@ public class GearPuzzleManager : MonoBehaviour
 
         puzzleSolved = false;
         Debug.Log($"Gear removed, chain now has {connectedCount} connected gears");
+
+        if (firstCorrectGearLoopSource != null && slots != null && slots.Length > 0 && slots[0] == slot)
+        {
+            if (firstCorrectGearLoopSource.isPlaying)
+                firstCorrectGearLoopSource.Stop();
+        }
     }
 
 

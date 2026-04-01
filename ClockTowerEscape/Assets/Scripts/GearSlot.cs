@@ -16,6 +16,12 @@ public class GearSlot : MonoBehaviour
     public GearPuzzleManager puzzleManager;
     public int requiredGearSize = 1;
 
+    [Header("Audio")]
+    public AudioClip placeClip;
+    public AudioClip removeClip;
+    [Range(0f, 1f)]
+    public float sfxVolume = 1f;
+
     [HideInInspector] public bool isFilled = false;
     [HideInInspector] public Transform snappedGear;
     [HideInInspector] public bool isCorrectGear = false;
@@ -108,6 +114,9 @@ public class GearSlot : MonoBehaviour
         if (puzzleManager != null)
             puzzleManager.OnGearRemoved(this);
 
+        if (removeClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(removeClip, transform.position, sfxVolume, 1f);
+
         Debug.Log($"Gear removed from {gameObject.name}");
     }
 
@@ -139,6 +148,9 @@ public class GearSlot : MonoBehaviour
 
         if (puzzleManager != null)
             puzzleManager.OnGearRemoved(this);
+
+        if (removeClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(removeClip, transform.position, sfxVolume, 1f);
 
         Debug.Log($"Gear removed (VR) from {gameObject.name}");
     }
@@ -179,6 +191,9 @@ public class GearSlot : MonoBehaviour
 
         if (puzzleManager != null)
             puzzleManager.OnGearPlaced(this);
+
+        if (placeClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(placeClip, transform.position, sfxVolume, 1f);
 
         Debug.Log($"Gear placed (VR) in {gameObject.name} — {(isCorrectGear ? "correct size!" : "wrong size")}");
     }
@@ -230,5 +245,8 @@ public class GearSlot : MonoBehaviour
 
         if (puzzleManager != null)
             puzzleManager.OnGearPlaced(this);
+
+        if (placeClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySpatialClip(placeClip, transform.position, sfxVolume, 1f);
     }
 }
