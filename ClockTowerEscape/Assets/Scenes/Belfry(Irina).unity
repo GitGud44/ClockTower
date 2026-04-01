@@ -382,13 +382,46 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 496934898417910074, guid: bf4d6303ddcb64295aefa9f8f4f5db9a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 517085812}
   m_SourcePrefab: {fileID: 100100000, guid: bf4d6303ddcb64295aefa9f8f4f5db9a, type: 3}
 --- !u!4 &517085810 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7560372308018567930, guid: bf4d6303ddcb64295aefa9f8f4f5db9a, type: 3}
   m_PrefabInstance: {fileID: 517085809}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &517085811 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 496934898417910074, guid: bf4d6303ddcb64295aefa9f8f4f5db9a, type: 3}
+  m_PrefabInstance: {fileID: 517085809}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &517085812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517085811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9861c9deda7ca5f45ba4303dfbfb2b45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableHighlight: 1
+  objectsToHighlight: []
+  emissionColor: {r: 1, g: 1, b: 1, a: 1}
+  emissionIntensity: 0.2
+  OnGazeEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGazeExit:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &556478510
 PrefabInstance:
   m_ObjectHideFlags: 0
