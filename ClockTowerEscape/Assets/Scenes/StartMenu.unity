@@ -1907,6 +1907,53 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5490547374792357777, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
   m_PrefabInstance: {fileID: 438231093}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &188102455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188102453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9931db2199e5681489b2f0da707466fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Mediator: {fileID: 874802511}
+  m_TransformationPriority: 0
+  m_StepDistance: 1
+  m_Cooldown: 0.3
+  m_InputThreshold: 0.5
+  m_EnableStrafe: 1
+  m_ForwardSource: {fileID: 2138690902}
+  m_LeftHandMoveInput:
+    m_InputSourceMode: 2
+    m_InputAction:
+      m_Name: Left Hand Move
+      m_Type: 0
+      m_ExpectedControlType: Vector2
+      m_Id: b90284dc-d267-4f33-85be-4d265cc9f0ac
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_InputActionReference: {fileID: 6972639530819350904, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_ObjectReferenceObject: {fileID: 0}
+    m_ManualValue: {x: 0, y: 0}
+  m_RightHandMoveInput:
+    m_InputSourceMode: 0
+    m_InputAction:
+      m_Name: Right Hand Move
+      m_Type: 0
+      m_ExpectedControlType: Vector2
+      m_Id: 2c65746f-0f1b-47af-8d0d-32247ad62828
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_InputActionReference: {fileID: 0}
+    m_ObjectReferenceObject: {fileID: 0}
+    m_ManualValue: {x: 0, y: 0}
 --- !u!1 &190870545
 GameObject:
   m_ObjectHideFlags: 0
@@ -4912,6 +4959,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 586314338713301090, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1959764093982491624, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
@@ -4998,6 +5049,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7431146227912994578, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1577588836}
+    - targetCorrespondingSourceObject: {fileID: 3530232924607247297, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 549258694}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6512634950570601432, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
       insertIndex: -1
@@ -5005,6 +5059,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3976843446969660017, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 438231097}
+    - targetCorrespondingSourceObject: {fileID: 5490547374792357777, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 188102455}
   m_SourcePrefab: {fileID: 100100000, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
 --- !u!1 &438231094 stripped
 GameObject:
@@ -6505,6 +6562,85 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 0
+--- !u!1 &549258693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 549258694}
+  - component: {fileID: 549258695}
+  m_Layer: 0
+  m_Name: SnapTurn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &549258694
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549258693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 874802510}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &549258695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549258693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9f365cf844c03449bc8973eead2c3c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Mediator: {fileID: 874802511}
+  m_TransformationPriority: 0
+  m_TurnAmount: 45
+  m_DebounceTime: 0.5
+  m_EnableTurnLeftRight: 1
+  m_EnableTurnAround: 1
+  m_DelayTime: 0
+  m_LeftHandTurnInput:
+    m_InputSourceMode: 0
+    m_InputAction:
+      m_Name: Left Hand Snap Turn
+      m_Type: 0
+      m_ExpectedControlType: Vector2
+      m_Id: a46e59a9-d863-4a83-8c43-5647884b8cdc
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_InputActionReference: {fileID: 0}
+    m_ObjectReferenceObject: {fileID: 0}
+    m_ManualValue: {x: 0, y: 0}
+  m_RightHandTurnInput:
+    m_InputSourceMode: 2
+    m_InputAction:
+      m_Name: Right Hand Snap Turn
+      m_Type: 0
+      m_ExpectedControlType: Vector2
+      m_Id: 3f5f4dce-7ba2-43dc-b704-e272365d8591
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_InputActionReference: {fileID: -6493913391331992944, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    m_ObjectReferenceObject: {fileID: 0}
+    m_ManualValue: {x: 0, y: 0}
 --- !u!1001 &550760615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10220,7 +10356,7 @@ MonoBehaviour:
   accessibilityMenuPanel: {fileID: 825378393}
   teleport: {fileID: 188102453}
   move: {fileID: 1364228398}
-  snapTurn: {fileID: 0}
+  snapTurn: {fileID: 549258693}
   continuousTurn: {fileID: 2016662590}
   teleportInteractor: {fileID: 1992165733}
   teleportToggle: {fileID: 935462860}
@@ -10435,7 +10571,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Teleport
+  m_text: Snap/Step
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 34a6b2b9a083141f5a3430cad29e7c6a, type: 2}
   m_sharedMaterial: {fileID: -8867805462199674780, guid: 34a6b2b9a083141f5a3430cad29e7c6a, type: 2}
@@ -11019,6 +11155,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slider: {fileID: 870330537}
   valueText: {fileID: 1937902898}
+--- !u!4 &874802510 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3530232924607247297, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
+  m_PrefabInstance: {fileID: 438231093}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &874802511 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3632137016778791081, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
+  m_PrefabInstance: {fileID: 438231093}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fa7b4195685c3846be746c74f0ab2f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &876544810
 GameObject:
   m_ObjectHideFlags: 0
@@ -15544,7 +15696,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Teleport
+  m_text: Step/Snap
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 34a6b2b9a083141f5a3430cad29e7c6a, type: 2}
   m_sharedMaterial: {fileID: -8867805462199674780, guid: 34a6b2b9a083141f5a3430cad29e7c6a, type: 2}
@@ -21541,7 +21693,7 @@ MonoBehaviour:
   musicVolumeSlider: {fileID: 607381078}
   teleport: {fileID: 188102453}
   move: {fileID: 1364228398}
-  snapTurn: {fileID: 0}
+  snapTurn: {fileID: 549258693}
   continuousTurn: {fileID: 2016662590}
   teleportToggle: {fileID: 2054794029}
   moveToggle: {fileID: 1701726792}
@@ -22907,6 +23059,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2138690902 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8808570033268041707, guid: ba3cd216b790941238e19e86b0d67fb5, type: 3}
+  m_PrefabInstance: {fileID: 438231093}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2144796908
 GameObject:
   m_ObjectHideFlags: 0
