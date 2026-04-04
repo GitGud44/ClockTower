@@ -34,7 +34,7 @@ public static class SettingsState
 
     public static bool GetUseContinuousTurn()
     {
-        return PlayerPrefs.GetInt(SettingsKeys.TurnMode, 0) == 1;
+        return PlayerPrefs.GetInt(SettingsKeys.TurnMode, 1) == 1;
     }
 
     public static void SetSfxVolume(float volume)
