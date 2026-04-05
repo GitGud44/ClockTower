@@ -384,6 +384,8 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
+  pickupClip: {fileID: 0}
+  pickupVolume: 1
 --- !u!54 &20768864
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -982,6 +984,8 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
+  pickupClip: {fileID: 0}
+  pickupVolume: 1
 --- !u!1 &554618971
 GameObject:
   m_ObjectHideFlags: 0
@@ -1752,6 +1756,8 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
+  pickupClip: {fileID: 0}
+  pickupVolume: 1
 --- !u!1 &765462477
 GameObject:
   m_ObjectHideFlags: 0
@@ -2158,6 +2164,8 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
+  pickupClip: {fileID: 0}
+  pickupVolume: 1
 --- !u!1001 &842401664
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2171,6 +2179,10 @@ PrefabInstance:
       value: Clock Puzzle
       objectReference: {fileID: 0}
     - target: {fileID: 3648310083173653497, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: handMoveClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6398abb15616b4236822d7a5b5216d74, type: 3}
+    - target: {fileID: 3648310083173653497, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
       propertyPath: solutionHour
       value: 11
       objectReference: {fileID: 0}
@@ -2178,6 +2190,10 @@ PrefabInstance:
       propertyPath: nextSceneName
       value: End_Scene
       objectReference: {fileID: 0}
+    - target: {fileID: 3648310083173653497, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
+      propertyPath: buttonPressClip
+      value: 
+      objectReference: {fileID: 8300000, guid: ec18ee13639b5d5498b64a679ca485c6, type: 3}
     - target: {fileID: 3648310083173653497, guid: 233b6a43b97ac45c6bfc4e10d6b353c6, type: 3}
       propertyPath: solutionMinutesOnes
       value: 3
@@ -2889,6 +2905,8 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
+  pickupClip: {fileID: 0}
+  pickupVolume: 1
 --- !u!54 &1046008001
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4835,6 +4853,8 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
+  pickupClip: {fileID: 0}
+  pickupVolume: 1
 --- !u!54 &1717369168
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5758,6 +5778,8 @@ MonoBehaviour:
   followSpeed: 25
   maxSpeed: 15
   holdOffset: {x: 0, y: 0, z: 0}
+  pickupClip: {fileID: 0}
+  pickupVolume: 1
 --- !u!54 &2028037525
 Rigidbody:
   m_ObjectHideFlags: 0
