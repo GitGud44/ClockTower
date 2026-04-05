@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+//this is just for the sliders to display a dynamically changing number 
 public class SliderDisplay : MonoBehaviour
 {
     public Slider slider;

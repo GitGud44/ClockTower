@@ -89,7 +89,6 @@ public class end_scene : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-        Debug.Log("end scene: mode = " + (vr ? "VR" : "Desktop"));
     }
 
     bool Pressed()
@@ -139,6 +138,5 @@ public class end_scene : MonoBehaviour
             }
         }
 
-        Debug.Log("end scene: page " + (cur + 1) + " / " + pages.Length);
     }
 }
