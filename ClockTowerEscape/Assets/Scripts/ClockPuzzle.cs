@@ -28,6 +28,13 @@ public class ClockPuzzle : MonoBehaviour
     [Range(0, 5)]  public int solutionMinutesTens = 0;
     [Range(0, 9)]  public int solutionMinutesOnes = 0;
 
+
+    [Header("Audio")]
+    public AudioClip buttonPressClip;
+    [Range(0f, 1f)] public float buttonPressVolume = 1f;
+    public AudioClip handMoveClip;
+    [Range(0f, 1f)] public float handMoveVolume = 1f;
+
     [Header("Scene Transition")]
     public string nextSceneName;
     public float fadeOutDuration = 1.5f;
@@ -95,6 +102,8 @@ public class ClockPuzzle : MonoBehaviour
     {
         if (solved) return;
         hourIndex = (hourIndex + 1) % 12;
+        if (buttonPressClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlayClip(buttonPressClip, buttonPressVolume);
         if (hourWheel != null) StartCoroutine(SnapRotate(hourWheel, hourIndex, 12));
         ApplyClockHands(snap: false);
     }
@@ -103,6 +112,8 @@ public class ClockPuzzle : MonoBehaviour
     {
         if (solved) return;
         minutesTensIndex = (minutesTensIndex + 1) % 12;
+        if (buttonPressClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlayClip(buttonPressClip, buttonPressVolume);
         if (minutesTensWheel != null) StartCoroutine(SnapRotate(minutesTensWheel, minutesTensIndex, 12));
         ApplyClockHands(snap: false);
     }
@@ -111,6 +122,8 @@ public class ClockPuzzle : MonoBehaviour
     {
         if (solved) return;
         minutesOnesIndex = (minutesOnesIndex + 1) % 10;
+        if (buttonPressClip != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlayClip(buttonPressClip, buttonPressVolume);
         if (minutesOnesWheel != null) StartCoroutine(SnapRotate(minutesOnesWheel, minutesOnesIndex, 10));
         ApplyClockHands(snap: false);
     }
@@ -127,6 +140,8 @@ public class ClockPuzzle : MonoBehaviour
         }
         else
         {
+            if (handMoveClip != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlayClip(handMoveClip, handMoveVolume);
             if (hourHand   != null) StartCoroutine(RotateHandTo(hourHand,   hourDeg));
             if (minuteHand != null) StartCoroutine(RotateHandTo(minuteHand, minuteDeg));
         }
