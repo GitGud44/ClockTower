@@ -171,6 +171,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4335084848169976186, guid: 86702ca1d29224b9f96a072dbde6c7cd, type: 3}
+      propertyPath: pickupClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
     - target: {fileID: 4384451023298047318, guid: 86702ca1d29224b9f96a072dbde6c7cd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.491207
@@ -362,7 +366,7 @@ PrefabInstance:
     - target: {fileID: 7961569999631941709, guid: bf4d6303ddcb64295aefa9f8f4f5db9a, type: 3}
       propertyPath: placementClip
       value: 
-      objectReference: {fileID: 8300000, guid: dd8d3087059bf0a42b8005e3504a993f, type: 3}
+      objectReference: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
     - target: {fileID: 7961569999631941709, guid: bf4d6303ddcb64295aefa9f8f4f5db9a, type: 3}
       propertyPath: wrongOrderClip
       value: 
@@ -438,6 +442,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Gear
       objectReference: {fileID: 0}
+    - target: {fileID: 5597730673522640051, guid: 062ba8e8a8fcd4c8aa3f19a93ca03f6f, type: 3}
+      propertyPath: pickupClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6f6035426791f4eaaa6637111e14b4eb, type: 3}
     - target: {fileID: 7150837676485564796, guid: 062ba8e8a8fcd4c8aa3f19a93ca03f6f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.2457695
@@ -1520,6 +1528,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7747648557238907013, guid: d20dffb9adf954a5eacab242ad87eef8, type: 3}
+      propertyPath: pickupClip
+      value: 
+      objectReference: {fileID: 8300000, guid: a4d4613eef35e406d90aac1c4b81d9ad, type: 3}
     - target: {fileID: 8566541296439185246, guid: d20dffb9adf954a5eacab242ad87eef8, type: 3}
       propertyPath: m_LocalScale.x
       value: 7.1210585

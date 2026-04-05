@@ -1,10 +1,15 @@
 using UnityEngine;
 
+
 public class DesktopGrabbable : MonoBehaviour
 {
     public float followSpeed = 25f; // how fast the object chases the hold point
     public float maxSpeed = 15f;    // I cap this so it doesnt clip through walls
     public Vector3 holdOffset = Vector3.zero; // offset from hold point, you can tweak this in the inspector
+
+    [Header("Pickup Sound")]
+    public AudioClip pickupClip;
+    public float pickupVolume = 1f;
 
     private Rigidbody rb;
     private bool isGrabbed = false;
@@ -73,6 +78,11 @@ public class DesktopGrabbable : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
+        // Play pickup sound
+        if (pickupClip != null && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySpatialClip(pickupClip, transform.position, pickupVolume, 1f);
+        }
     }
 
     public void Release()
