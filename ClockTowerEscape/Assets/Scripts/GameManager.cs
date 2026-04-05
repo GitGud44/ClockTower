@@ -50,14 +50,12 @@ public class GameManager : MonoBehaviour
         GameObject activePlayer = GetActivePlayerObject();
         if (activePlayer == null)
         {
-            Debug.LogWarning("[GameManager] No active player found after scene load.");
             yield break;
         }
 
         Transform spawnPoint = FindSpawnTransformInScene(loadedScene);
         if (spawnPoint == null)
         {
-            Debug.LogWarning($"[GameManager] No spawn point found in scene '{loadedScene.name}'. Use tag 'Respawn' or name 'SpawnPoint'.");
             yield break;
         }
 
@@ -129,7 +127,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("AudioManager instance not found!");
+            Debug.LogWarning("audiomanager not found!");
         }
     }
 
@@ -142,7 +140,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("AudioManager instance not found!");
+            Debug.LogWarning("audiomanager not found!");
         }
     }
 
@@ -167,6 +165,8 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+//this is to find the spawn point in the scene either by tag or by name, 
+//it searches through all the root objects and their children to find it, this way we can just put a spawn point object anywhere in the scene and it will find it as long as its tagged or named correctly
     private Transform FindChildByTag(Transform root, string tag)
     {
         if (root.CompareTag(tag))
