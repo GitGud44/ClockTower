@@ -34,6 +34,7 @@ public class MenuToggle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //opens pause menu if esc is pressed
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             ToggleMenuState();
@@ -42,12 +43,14 @@ public class MenuToggle : MonoBehaviour
 
     private void OnVrMenuPerformed(InputAction.CallbackContext ctx)
     {
+        //opens the pause menu in vr
         if (GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR)
         {
             ToggleMenuState();
         }
     }
 
+    //toggles menu state and cursor state
     private void ToggleMenuState()
     {
         isMenuOpen = !isMenuOpen;
@@ -56,6 +59,7 @@ public class MenuToggle : MonoBehaviour
         UpdateGamePause();
     }
 
+    //closes menu
     public void CloseMenu()
     {
         isMenuOpen = false;
@@ -64,6 +68,7 @@ public class MenuToggle : MonoBehaviour
         UpdateGamePause();
     }
 
+    //updates cursor visibility if menu is open or not
     void UpdateCursorState()
     {
         if (isMenuOpen)
@@ -78,6 +83,7 @@ public class MenuToggle : MonoBehaviour
         }
     }
 
+    //freeze game if menu is open
     void UpdateGamePause()
     {
         if (isMenuOpen)

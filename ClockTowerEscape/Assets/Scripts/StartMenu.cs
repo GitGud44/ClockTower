@@ -4,10 +4,12 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//all start menu logic
 public class StartMenu : MonoBehaviour
 {
     private const float AudioSliderMaxValue = 10f;
 
+//get all panels, sliders and toggles
     public GameObject mainPanel;
     public GameObject settingsPanel;
     public GameObject vrSettingsPanel;
@@ -34,15 +36,19 @@ public class StartMenu : MonoBehaviour
     public Toggle vrSnapTurnToggle;
     public Toggle vrContinuousTurnToggle;
 
+    //to prevent the start button from being pressed multiple times
     private bool isTransitioning = false;
 
     void Update()
     {
-        if (isTransitioning) return;
+        if (isTransitioning) 
+        {
+            return;
+        }
 
-        bool shouldKeepCursorUnlocked = GameManager.Instance == null ||
-                                        GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.Desktop;
+        bool shouldKeepCursorUnlocked = GameManager.Instance == null || GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.Desktop;
 
+        //unlocks cusor if we are in desktop mode
         if (shouldKeepCursorUnlocked)
         {
             Cursor.visible = true;
@@ -55,16 +61,25 @@ public class StartMenu : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        if (SceneFadeManager.Instance == null)
+        if (SceneFadeManager.Instance == null) {
             new GameObject("SceneFadeManager").AddComponent<SceneFadeManager>();
+        }
 
-        if (mainPanel != null) mainPanel.SetActive(true);
-        if (settingsPanel != null) settingsPanel.SetActive(false);
-        if (vrSettingsPanel != null) vrSettingsPanel.SetActive(false);
+        //makes sure correct start menu is enabled
+        if (mainPanel != null) {
+            mainPanel.SetActive(true);
+        }
+        if (settingsPanel != null) {
+            settingsPanel.SetActive(false);
+        }
+        if (vrSettingsPanel != null) {
+            vrSettingsPanel.SetActive(false);
+        }
 
         LoadVolumeSettings();
     }
 
+    //gets all volume seetings and applies them
     private void LoadVolumeSettings()
     {
         float savedSfxVolume = SettingsState.GetSfxVolume();
@@ -81,6 +96,7 @@ public class StartMenu : MonoBehaviour
         LoadAccessibilitySettings();
     }
 
+    //configure sliders for the correct ranges and listeners
     private void ConfigureAudioSlider(Slider slider, UnityAction<float> listener, float value)
     {
         if (slider == null)
@@ -94,26 +110,35 @@ public class StartMenu : MonoBehaviour
         slider.onValueChanged.AddListener(listener);
     }
 
+    //
     private void LoadAccessibilitySettings()
     {
-        if (teleportToggle != null)
+        if (teleportToggle != null) {
             teleportToggle.onValueChanged.AddListener(OnTeleportToggleChanged);
-        if (moveToggle != null)
+        }
+        if (moveToggle != null) {
             moveToggle.onValueChanged.AddListener(OnMoveToggleChanged);
-        if (snapTurnToggle != null)
+        }
+        if (snapTurnToggle != null) {
             snapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
-        if (continuousTurnToggle != null)
+        }
+        if (continuousTurnToggle != null) {
             continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
+        }
 
         // same listeners for the VR settings panel toggles so they actually do something
-        if (vrTeleportToggle != null)
+        if (vrTeleportToggle != null) {
             vrTeleportToggle.onValueChanged.AddListener(OnTeleportToggleChanged);
-        if (vrMoveToggle != null)
+        }
+        if (vrMoveToggle != null) {
             vrMoveToggle.onValueChanged.AddListener(OnMoveToggleChanged);
-        if (vrSnapTurnToggle != null)
+        }
+        if (vrSnapTurnToggle != null) {
             vrSnapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
-        if (vrContinuousTurnToggle != null)
+        }
+        if (vrContinuousTurnToggle != null) {
             vrContinuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
+        }
 
         bool useTeleport = SettingsState.GetUseTeleport();
         bool useContinuousTurn = SettingsState.GetUseContinuousTurn();
@@ -141,14 +166,13 @@ public class StartMenu : MonoBehaviour
         if (isTransitioning) return;
         isTransitioning = true;
 
-        // Lock and hide cursor when leaving the menu
+        //lock and hide cursor when leaving the menu
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        // If Desktop mode was chosen, turn on the DesktopPlayer script now
+        //if Desktop mode was chosen, turn on the DesktopPlayer script now
         if (GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.Desktop)
         {
-            // Older Unity versions use the bool overload for includeInactive
             var desktopController = FindObjectOfType<DesktopPlayer>(true);
             if (desktopController != null && desktopController.enabled == false)
             {
@@ -171,12 +195,18 @@ public class StartMenu : MonoBehaviour
             settingsPanel.SetActive(true);
     }
 
+    //closes settings
     public void CloseSettings()
     {
-        if (settingsPanel != null) settingsPanel.SetActive(false);
-        if (vrSettingsPanel != null) vrSettingsPanel.SetActive(false);
+        if (settingsPanel != null) {
+            settingsPanel.SetActive(false);
+        }
+        if (vrSettingsPanel != null) {
+            vrSettingsPanel.SetActive(false);
+        }
     }
 
+    //quits game
     public void QuitGame()
     {
         #if UNITY_EDITOR
@@ -186,13 +216,13 @@ public class StartMenu : MonoBehaviour
         #endif
     }
 
-
+    //set sfx volume based on slider
     public void SetSFXVolume(float volume)
     {
         float normalizedVolume = Mathf.Clamp01(volume / AudioSliderMaxValue);
         SettingsState.SetSfxVolume(normalizedVolume);
     }
-
+    //same but with music
     public void SetMusicVolume(float volume)
     {
         float normalizedVolume = Mathf.Clamp01(volume / AudioSliderMaxValue);
@@ -201,13 +231,24 @@ public class StartMenu : MonoBehaviour
 
     private void ApplyLocomotionMode(bool useTeleport, bool save)
     {
-        if (teleportToggle != null) teleportToggle.SetIsOnWithoutNotify(useTeleport);
-        if (moveToggle != null) moveToggle.SetIsOnWithoutNotify(!useTeleport);
-        if (vrTeleportToggle != null) vrTeleportToggle.SetIsOnWithoutNotify(useTeleport);
-        if (vrMoveToggle != null) vrMoveToggle.SetIsOnWithoutNotify(!useTeleport);
+        if (teleportToggle != null)
+            teleportToggle.SetIsOnWithoutNotify(useTeleport);
 
-        if (teleport != null) teleport.SetActive(useTeleport);
-        if (move != null) move.SetActive(!useTeleport);
+        if (moveToggle != null)
+            moveToggle.SetIsOnWithoutNotify(!useTeleport);
+
+        if (vrTeleportToggle != null)
+            vrTeleportToggle.SetIsOnWithoutNotify(useTeleport);
+
+        if (vrMoveToggle != null)
+            vrMoveToggle.SetIsOnWithoutNotify(!useTeleport);
+
+        if (teleport != null) {
+            teleport.SetActive(useTeleport);
+        }
+        if (move != null) {
+            move.SetActive(!useTeleport);
+        }
 
         if (save)
         {
@@ -217,10 +258,17 @@ public class StartMenu : MonoBehaviour
 
     private void ApplyTurnMode(bool useContinuousTurn, bool save)
     {
-        if (continuousTurnToggle != null) continuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
-        if (snapTurnToggle != null) snapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
-        if (vrContinuousTurnToggle != null) vrContinuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
-        if (vrSnapTurnToggle != null) vrSnapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
+        if (continuousTurnToggle != null)
+            continuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
+
+        if (snapTurnToggle != null)
+            snapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
+
+        if (vrContinuousTurnToggle != null)
+            vrContinuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
+
+        if (vrSnapTurnToggle != null)
+            vrSnapTurnToggle.SetIsOnWithoutNotify(!useContinuousTurn);
 
         if (continuousTurn != null) continuousTurn.SetActive(useContinuousTurn);
         if (snapTurn != null) snapTurn.SetActive(!useContinuousTurn);
@@ -231,7 +279,7 @@ public class StartMenu : MonoBehaviour
         }
     }
 
-
+    //only one toggle can be on at a time
     void OnTeleportToggleChanged(bool isOn)
     {
         if (isOn)
@@ -256,6 +304,7 @@ public class StartMenu : MonoBehaviour
             ApplyTurnMode(true, true);
     }
 
+    //set desktop options
     public void SetPlayerSpeed(float speed)
     {
         SettingsState.SetPlayerSpeed(speed);
@@ -266,6 +315,7 @@ public class StartMenu : MonoBehaviour
         SettingsState.SetMouseSensitivity(sensitivity);
     }
 
+    //add fade out when starting game
     private IEnumerator StartGameWithFade()
     {
         SceneFadeManager fm = SceneFadeManager.Instance;

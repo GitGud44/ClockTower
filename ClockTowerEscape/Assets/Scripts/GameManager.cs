@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    //define play modes for game
     public enum PlayMode { None, Desktop, VR }
     public PlayMode CurrentPlayMode { get; private set; } = PlayMode.None;
 
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
             SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    //sets game mode before proceeding to start menu
     public void SetGameMode(PlayMode mode)
     {
         CurrentPlayMode = mode;
@@ -81,6 +83,7 @@ public class GameManager : MonoBehaviour
             characterController.Move(Vector3.zero);
         }
 
+        //update player settings from the settings menu
         DesktopPlayer desktopPlayer = activePlayer.GetComponent<DesktopPlayer>();
         if (desktopPlayer != null)
         {
@@ -89,11 +92,11 @@ public class GameManager : MonoBehaviour
             desktopPlayer.ResetLook();
         }
 
-        Debug.Log($"[GameManager] Repositioned player '{activePlayer.name}' to spawn '{spawnPoint.name}' in scene '{loadedScene.name}'.");
     }
 
     private GameObject GetActivePlayerObject()
     {
+        //finds player object in scane based on game mode
         if (CurrentPlayMode == PlayMode.Desktop)
         {
             DesktopPlayer[] desktopPlayers = FindObjectsOfType<DesktopPlayer>(true);
@@ -130,7 +133,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    //stop music if its playing
     public void StopMusic()
     {
         if (AudioManager.Instance != null)

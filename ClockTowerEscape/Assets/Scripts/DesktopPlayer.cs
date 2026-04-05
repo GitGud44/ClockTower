@@ -49,6 +49,7 @@ public class DesktopPlayer : MonoBehaviour
             playerCamera.localRotation = Quaternion.identity;
     }
     
+    //set speed and sensitivity from settings menu
     public void SetMoveSpeed(float speed)
     {
         moveSpeed = speed;

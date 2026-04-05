@@ -12,6 +12,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip backgroundMusic;
     public bool playMusicOnAwake = true;
 
+    //checks to see that theres only one audiomanager per scene and starts music + applies previous sound effect settings
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -33,12 +34,14 @@ public class AudioManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    //deletes the audiomanager if the scene changes if one already exists
     private void OnDestroy()
     {
         if (Instance == this)
             SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    //when a new scene loads, applies existing audio settings, and plays music
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         EnsureOwnedAudioSources();
@@ -49,6 +52,7 @@ public class AudioManager : MonoBehaviour
             StartMusic();
     }
 
+    //checks to see that the audiomanager gameobject has audio sources on it, if not it adds them
     private void EnsureOwnedAudioSources()
     {
         if (sfxSource == null || sfxSource.gameObject != gameObject)
@@ -81,6 +85,7 @@ public class AudioManager : MonoBehaviour
         musicSource.loop = true;
     }
 
+    //plays the sound effect clip at the specific volume that was set
     public void PlayClip(AudioClip clip, float volumeScale = 1f)
     {
         EnsureOwnedAudioSources();
@@ -94,6 +99,7 @@ public class AudioManager : MonoBehaviour
         sfxSource.PlayOneShot(clip, Mathf.Clamp01(volumeScale));
     }
 
+    //if sfx is attached to object, it just plays the sound clip from there instead
     public void PlaySpatialClip(AudioClip clip, Vector3 worldPosition, float volumeScale = 1f, float spatialBlend = 1f)
     {
         if (clip == null)
@@ -126,7 +132,7 @@ public class AudioManager : MonoBehaviour
         Destroy(tempAudioObject, clip.length + 0.1f);
     }
 
-
+    //starts music if it exists and isnt already playing
     public void StartMusic()
     {
         EnsureOwnedAudioSources();
@@ -144,7 +150,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-
+    //stops music if its playing
     public void StopMusic()
     {
         if (musicSource != null && musicSource.isPlaying)
@@ -153,7 +159,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-
+    //pauses music if its playing
     public void PauseMusic()
     {
         if (musicSource != null && musicSource.isPlaying)
@@ -162,7 +168,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-
+    //resumes music if its paused
     public void ResumeMusic()
     {
         if (musicSource != null && !musicSource.isPlaying)
@@ -170,7 +176,6 @@ public class AudioManager : MonoBehaviour
             musicSource.Play();
         }
     }
-
 
     public void SetSFXVolume(float volume)
     {

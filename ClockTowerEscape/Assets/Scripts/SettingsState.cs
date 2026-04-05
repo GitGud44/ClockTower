@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//this is for saving and applying settings across the game
 public static class SettingsState
 {
     public const float DefaultSfxVolume = 0.5f;
@@ -7,6 +8,7 @@ public static class SettingsState
     public const float DefaultPlayerSpeed = 5f;
     public const float DefaultMouseSensitivity = 2f;
 
+//gets settings from player prefs
     public static float GetSfxVolume()
     {
         return PlayerPrefs.GetFloat(SettingsKeys.SfxVolume, DefaultSfxVolume);
@@ -91,6 +93,7 @@ public static class SettingsState
         PlayerPrefs.Save();
     }
 
+    //applies settings to game at runtime
     public static void ApplyRuntimeSettings()
     {
         if (AudioManager.Instance != null)
