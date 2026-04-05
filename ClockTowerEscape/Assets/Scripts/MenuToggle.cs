@@ -3,14 +3,22 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
+
 public class MenuToggle : MonoBehaviour
 {
     public GameObject UIMenu;
     bool isMenuOpen = false;
     public InputActionReference vrMenuAction;
+
+    [Header("XR Pause Menu Positioning")]
+    public Transform xrCamera;
+    public float menuDistance = 2f;
+
     void Start()
     {
         UIMenu.SetActive(false);
+        if (xrCamera == null && Camera.main != null)
+            xrCamera = Camera.main.transform;
     }
 
     void OnEnable()
@@ -51,9 +59,25 @@ public class MenuToggle : MonoBehaviour
     private void ToggleMenuState()
     {
         isMenuOpen = !isMenuOpen;
+        if (isMenuOpen && GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR)
+        {
+            PositionMenuInFrontOfVRPlayer();
+        }
         UIMenu.SetActive(isMenuOpen);
         UpdateCursorState();
         UpdateGamePause();
+    }
+
+    private void PositionMenuInFrontOfVRPlayer()
+    {
+        if (xrCamera == null || UIMenu == null) return;
+        Vector3 forward = Vector3.ProjectOnPlane(xrCamera.forward, Vector3.up).normalized;
+        if (forward.sqrMagnitude < 0.01f)
+            forward = xrCamera.transform.parent ? xrCamera.transform.parent.forward : Vector3.forward;
+        Vector3 targetPos = xrCamera.position + forward * menuDistance;
+        targetPos.y = UIMenu.transform.position.y;
+        UIMenu.transform.position = targetPos;
+        UIMenu.transform.rotation = Quaternion.LookRotation(forward, Vector3.up);
     }
 
     public void CloseMenu()
@@ -80,13 +104,16 @@ public class MenuToggle : MonoBehaviour
 
     void UpdateGamePause()
     {
-        if (isMenuOpen)
+        if (GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.Desktop)
         {
-            Time.timeScale = 0f;
-        }
-        else
-        {
-            Time.timeScale = 1f;
+            if (isMenuOpen)
+            {
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                Time.timeScale = 1f;
+            }
         }
     }
 }
