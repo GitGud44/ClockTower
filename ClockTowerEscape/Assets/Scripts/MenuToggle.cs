@@ -8,7 +8,7 @@ public class MenuToggle : MonoBehaviour
 {
     public GameObject UIMenu;
     bool isMenuOpen = false;
-    public InputActionReference vrMenuAction;
+    public InputActionReference vrSecondaryButtonAction;
 
     [Header("XR Pause Menu Positioning")]
     public Transform xrCamera;
@@ -23,19 +23,17 @@ public class MenuToggle : MonoBehaviour
 
     void OnEnable()
     {
-        if (vrMenuAction != null)
+        if (vrSecondaryButtonAction != null)
         {
-            vrMenuAction.action.performed += OnVrMenuPerformed;
-            vrMenuAction.action.Enable();
+            vrSecondaryButtonAction.action.Enable();
         }
     }
 
     void OnDisable()
     {
-        if (vrMenuAction != null)
+        if (vrSecondaryButtonAction != null)
         {
-            vrMenuAction.action.performed -= OnVrMenuPerformed;
-            vrMenuAction.action.Disable();
+            vrSecondaryButtonAction.action.Disable();
         }
     }
 
@@ -46,13 +44,14 @@ public class MenuToggle : MonoBehaviour
         {
             ToggleMenuState();
         }
-    }
 
-    private void OnVrMenuPerformed(InputAction.CallbackContext ctx)
-    {
+        // VR equivalent of the desktop ESC check above
         if (GameManager.Instance != null && GameManager.Instance.CurrentPlayMode == GameManager.PlayMode.VR)
         {
-            ToggleMenuState();
+            if (vrSecondaryButtonAction != null && vrSecondaryButtonAction.action.WasPressedThisFrame())
+            {
+                ToggleMenuState();
+            }
         }
     }
 
