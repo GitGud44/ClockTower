@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
 /*
@@ -70,6 +71,19 @@ public class VRUIRaySetup : MonoBehaviour
             Destroy(inputSystemModule);
 
         if (eventSystem.GetComponent<XRUIInputModule>() == null)
+        {
             eventSystem.gameObject.AddComponent<XRUIInputModule>();
+
+            //refresh ray interactors so they recognize the new input module
+            var rayInteractors = FindObjectsByType<XRRayInteractor>(FindObjectsSortMode.None);
+            foreach (var ray in rayInteractors)
+            {
+                if (ray.enabled)
+                {
+                    ray.enabled = false;
+                    ray.enabled = true;
+                }
+            }
+        }
     }
 }

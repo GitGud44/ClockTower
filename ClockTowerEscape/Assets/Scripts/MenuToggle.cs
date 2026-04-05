@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
+
 public class MenuToggle : MonoBehaviour
 {
     public GameObject UIMenu;
@@ -10,7 +11,7 @@ public class MenuToggle : MonoBehaviour
     public InputActionReference vrMenuAction;
 
     [Header("XR Pause Menu Positioning")]
-    public Transform xrCamera; // Assign XR Rig camera in inspector
+    public Transform xrCamera;
     public float menuDistance = 2f;
 
     void Start()
