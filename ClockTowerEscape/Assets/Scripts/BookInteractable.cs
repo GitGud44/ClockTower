@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class BookInteractable : MonoBehaviour
 {
@@ -57,13 +58,18 @@ public class BookInteractable : MonoBehaviour
     private void SetupBookSide(BoxCollider side, bool isRight)
     {
         if (side == null) return;
+
+        //Desktop
         RaycastInteractable ri = side.gameObject.GetComponent<RaycastInteractable>();
         if (ri == null) ri = side.gameObject.AddComponent<RaycastInteractable>();
-
         if (ri.OnClick == null)
             ri.OnClick = new UnityEngine.Events.UnityEvent();
-
         ri.OnClick.AddListener(() => OnSideClicked(isRight));
+
+        ///VR
+        XRSimpleInteractable xrSimple = side.gameObject.GetComponent<XRSimpleInteractable>();
+        if (xrSimple != null)
+            xrSimple.selectEntered.AddListener((args) => OnSideClicked(isRight));
     }
 
     private void OnSideClicked(bool clickedRight)
@@ -92,7 +98,6 @@ public class BookInteractable : MonoBehaviour
     {
         isFlipping = true;
 
-        //Lift page straight up along local Y to liftHeight (so all page flips will pivot around the same point)
         Vector3 liftTarget = new Vector3(page.localPosition.x, liftHeight, page.localPosition.z);
         while (page.localPosition.y < liftHeight - 0.0001f)
         {
@@ -101,7 +106,6 @@ public class BookInteractable : MonoBehaviour
         }
         page.localPosition = liftTarget;
 
-        //Rotate page 180 degrees around its local Z axis
         float rotated   = 0f;
         float direction = forward ? -1f : 1f;
         while (rotated < 180f)
@@ -112,7 +116,6 @@ public class BookInteractable : MonoBehaviour
             yield return null;
         }
 
-        //Drop page straight down to stack position on other side
         List<Transform> destStack = forward ? leftStack : rightStack;
         float destY       = stackBaseY + (destStack.Count - 1) * pageStackStep;
         Vector3 dropTarget = new Vector3(page.localPosition.x, destY, page.localPosition.z);
@@ -146,22 +149,10 @@ public class BookInteractable : MonoBehaviour
     private void PlayFlipSound()
     {
         if (pageFlipClip != null && AudioManager.Instance != null)
-        {
             AudioManager.Instance.PlaySpatialClip(pageFlipClip, transform.position, pageFlipVolume, 1f);
-        }
 
         Debug.Log("Book interacted - playing PageFlip sound");
 
         // TODO: Show hint UI with lantern order clues
-    }
-
-    //VR: hand trigger enters the side collider
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag("Hand")) return;
-        if (rightCollider != null && rightCollider.bounds.Intersects(other.bounds))
-            OnSideClicked(true);
-        else if (leftCollider != null && leftCollider.bounds.Intersects(other.bounds))
-            OnSideClicked(false);
     }
 }

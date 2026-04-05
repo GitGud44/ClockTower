@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Bell : MonoBehaviour
 {
@@ -28,8 +29,6 @@ public class Bell : MonoBehaviour
     [Tooltip("Fired when the full ring sequence completes. Wire to ElevatorController.UnlockAndOpenDoors.")]
     public UnityEvent OnRingComplete;
 
-    int hand_colliders_inside = 0;
-
     void Start()
     {
         initialRotation = transform.localRotation;
@@ -37,11 +36,15 @@ public class Bell : MonoBehaviour
 
     void Awake()
     {
+        // Desktop
         RaycastInteractable interactable = GetComponent<RaycastInteractable>();
         if (interactable != null)
-        {
             interactable.OnClick.AddListener(OnBellClicked);
-        }
+
+        // VR
+        XRSimpleInteractable xrSimple = GetComponent<XRSimpleInteractable>();
+        if (xrSimple != null)
+            xrSimple.selectEntered.AddListener((args) => OnBellClicked());
     }
 
     private void OnBellClicked()
@@ -56,7 +59,7 @@ public class Bell : MonoBehaviour
             RaycastInteractable interactable = GetComponent<RaycastInteractable>();
             if (interactable != null)
             {
-                interactable.GazeExit(); 
+                interactable.GazeExit();
                 interactable.enableHighlight = false;
                 interactable.enabled = false;
             }
@@ -75,11 +78,9 @@ public class Bell : MonoBehaviour
                 yield return StartCoroutine(SwingToAngle(direction * swingAngle));
                 if (bellSound != null && AudioManager.Instance != null)
                     AudioManager.Instance.PlaySpatialClip(bellSound, transform.position, bellVolume, 1f);
-                //other direction
                 direction *= -1f;
                 yield return new WaitForSeconds(pauseBetweenSwings);
             }
-            //return to center after each swing sequence
             yield return StartCoroutine(SwingToAngle(0f));
             yield return new WaitForSeconds(pauseBetweenGroups);
         }
@@ -114,21 +115,5 @@ public class Bell : MonoBehaviour
             yield return null;
         }
         transform.localRotation = endRotation;
-    }
-
-
-  // ========== VR Trigger Interaction ==========
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Hand"))
-        {
-            hand_colliders_inside++;
-
-            if(hand_colliders_inside == 1 && ringRoutine == null)
-             {
-                StartRinging();
-             }
-        }
     }
 }

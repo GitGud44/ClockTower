@@ -3936,6 +3936,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 2041489021}
     m_Modifications:
     - target: {fileID: 228508901521010452, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
+      propertyPath: startsLocked
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 228508901521010452, guid: a3154c5d1965546b0844eb2374ebb65b, type: 3}
       propertyPath: nextSceneName
       value: Belfry(Irina)
       objectReference: {fileID: 0}

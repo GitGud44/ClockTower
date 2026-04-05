@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class ClockPuzzle : MonoBehaviour
 {
@@ -45,6 +46,7 @@ public class ClockPuzzle : MonoBehaviour
 
     void Awake()
     {
+        // Desktop
         RegisterButton(hourButton,        OnHourPressed);
         RegisterButton(minutesTensButton, OnMinutesTensPressed);
         RegisterButton(minutesOnesButton, OnMinutesOnesPressed);
@@ -52,6 +54,10 @@ public class ClockPuzzle : MonoBehaviour
 
     void Start()
     {
+        RegisterXR(hourButton,        OnHourPressed);
+        RegisterXR(minutesTensButton, OnMinutesTensPressed);
+        RegisterXR(minutesOnesButton, OnMinutesOnesPressed);
+
         ApplyClockHands(snap: true);
     }
 
@@ -75,6 +81,14 @@ public class ClockPuzzle : MonoBehaviour
     {
         if (button == null) return;
         button.OnClick.AddListener(onClick);
+    }
+
+    private void RegisterXR(RaycastInteractable button, UnityAction onClick)
+    {
+        if (button == null) return;
+        XRSimpleInteractable xrSimple = button.GetComponent<XRSimpleInteractable>();
+        if (xrSimple != null)
+            xrSimple.selectEntered.AddListener((args) => onClick());
     }
 
     private void OnHourPressed()
