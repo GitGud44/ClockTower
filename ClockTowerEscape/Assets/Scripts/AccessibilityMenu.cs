@@ -24,10 +24,20 @@ public class AccessibilityMenu : MonoBehaviour
 
     void Start()
     {
-        if (teleportToggle != null) teleportToggle.onValueChanged.AddListener(OnTeleportToggleChanged);
-        if (moveToggle != null) moveToggle.onValueChanged.AddListener(OnMoveToggleChanged);
-        if (snapTurnToggle != null) snapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
-        if (continuousTurnToggle != null) continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
+        //add listeners for both desktop and vr sliders and toggles
+        if (teleportToggle != null) 
+        {
+            teleportToggle.onValueChanged.AddListener(OnTeleportToggleChanged);
+        }
+        if (moveToggle != null) {
+            moveToggle.onValueChanged.AddListener(OnMoveToggleChanged);
+        }
+        if (snapTurnToggle != null) {
+            snapTurnToggle.onValueChanged.AddListener(OnSnapTurnToggleChanged);
+        }
+        if (continuousTurnToggle != null) {
+            continuousTurnToggle.onValueChanged.AddListener(OnContinuousTurnToggleChanged);
+        }
         if (speedSlider != null)
         {
             speedSlider.onValueChanged.AddListener(OnSpeedChanged);
@@ -47,17 +57,30 @@ public class AccessibilityMenu : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
-        if (accessibilityMenuPanel != null) accessibilityMenuPanel.SetActive(false);
+        //back button which allows u to return to the main pause menu from the accessibility/options menu
+        if (mainMenuPanel != null) {
+            mainMenuPanel.SetActive(true);
+        }
+        if (accessibilityMenuPanel != null) {
+            accessibilityMenuPanel.SetActive(false);
+        }
     }
-
+    // applies locomotion modes for vr and saves
     private void ApplyLocomotionMode(bool useTeleport, bool save)
     {
-        if (teleportToggle != null) teleportToggle.SetIsOnWithoutNotify(useTeleport);
-        if (moveToggle != null) moveToggle.SetIsOnWithoutNotify(!useTeleport);
+        if (teleportToggle != null) {
+            teleportToggle.SetIsOnWithoutNotify(useTeleport);
+        }
+        if (moveToggle != null) {
+            moveToggle.SetIsOnWithoutNotify(!useTeleport);
+        }
 
-        if (teleport != null) teleport.SetActive(useTeleport);
-        if (move != null) move.SetActive(!useTeleport);
+        if (teleport != null) {
+            teleport.SetActive(useTeleport);
+        }
+        if (move != null) {
+            move.SetActive(!useTeleport);
+        }
 
         if (teleportInteractor != null)
             teleportInteractor.enabled = useTeleport;
@@ -68,6 +91,7 @@ public class AccessibilityMenu : MonoBehaviour
         }
     }
 
+    //same as above but for turns
     private void ApplyTurnMode(bool useContinuousTurn, bool save)
     {
         if (continuousTurnToggle != null) continuousTurnToggle.SetIsOnWithoutNotify(useContinuousTurn);
@@ -89,6 +113,7 @@ public class AccessibilityMenu : MonoBehaviour
         }
     }
 
+    //for the toggles, so that only one toggle from each category can be seletced at a time
     void OnTeleportToggleChanged(bool isOn)
     {
         if (isOn)
@@ -113,6 +138,7 @@ public class AccessibilityMenu : MonoBehaviour
             ApplyTurnMode(true, true);
     }
 
+    //these are for the desktop sliders, if the sliders get moved then the player settings get updated
     void OnSpeedChanged(float speed)
     {
         SettingsState.SetPlayerSpeed(speed, desktopPlayer);
@@ -123,6 +149,7 @@ public class AccessibilityMenu : MonoBehaviour
         SettingsState.SetMouseSensitivity(sensitivity, desktopPlayer);
     }
 
+    //refershes settings and ensures that the correct toggles and sliders are selected based on previous user choices
     private void RefreshSettings()
     {
         RebindRuntimeTargets();
@@ -139,6 +166,9 @@ public class AccessibilityMenu : MonoBehaviour
         SettingsState.ApplyRuntimeSettings();
     }
 
+    //rebinds all the player prefabs and other objects like the teleport interactor
+    //this is needed so that when the player opens and closes the pause menu the script can find the right objects to update
+    //needed since we switch scenes
     private void RebindRuntimeTargets()
     {
         desktopPlayer = FindFirstObjectByType<DesktopPlayer>();
@@ -159,11 +189,13 @@ public class AccessibilityMenu : MonoBehaviour
             continuousTurn = FindSceneObject("Turn");
     }
 
+    //finds objects in scene by name
     private GameObject FindSceneObject(string objectName)
     {
         Scene activeScene = SceneManager.GetActiveScene();
         GameObject[] roots = activeScene.GetRootGameObjects();
 
+        //search through root objects to find object that matches the string name
         for (int index = 0; index < roots.Length; index++)
         {
             Transform match = FindChildRecursive(roots[index].transform, objectName);
@@ -174,6 +206,7 @@ public class AccessibilityMenu : MonoBehaviour
         return null;
     }
 
+    //just helps search the parent objects for its children to find the object with the string name again
     private Transform FindChildRecursive(Transform parent, string childName)
     {
         if (parent.name == childName)

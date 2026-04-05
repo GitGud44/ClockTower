@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+//this was made for the game mode menu to choose vr mode and close it so you could proceed into the start menu
 public class PrimaryButtonController : MonoBehaviour
 {
     public GameModeMenu gameModeMenu;
     public InputActionReference primaryButtonAction;
 
+    //listens for primary button input
     public void Awake()
     {
         if (primaryButtonAction != null)
@@ -16,6 +18,7 @@ public class PrimaryButtonController : MonoBehaviour
         InputSystem.onDeviceChange += OnDeviceChange;
     }
 
+    //destoys listeners for the primary button input
     public void OnDestroy()
     {
         if (primaryButtonAction != null)
@@ -26,6 +29,7 @@ public class PrimaryButtonController : MonoBehaviour
         InputSystem.onDeviceChange -= OnDeviceChange;
     }
 
+    //calls the start vr mode function
     private void PressBtn(InputAction.CallbackContext ctx)
     {
         GameModeMenu menu = gameModeMenu != null ? gameModeMenu : FindObjectOfType<GameModeMenu>();
@@ -37,6 +41,7 @@ public class PrimaryButtonController : MonoBehaviour
         menu.StartVRMode();
     }
 
+    //this is just a check that if th controller gets disconneceted and reconnected it wont cause issues
     private void OnDeviceChange(InputDevice device, InputDeviceChange change)
     {
         if (primaryButtonAction == null)

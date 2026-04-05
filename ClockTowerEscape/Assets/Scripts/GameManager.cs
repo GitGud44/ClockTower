@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    //define play modes for game
     public enum PlayMode { None, Desktop, VR }
     public PlayMode CurrentPlayMode { get; private set; } = PlayMode.None;
 
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
             SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    //sets game mode before proceeding to start menu
     public void SetGameMode(PlayMode mode)
     {
         CurrentPlayMode = mode;
@@ -48,14 +50,12 @@ public class GameManager : MonoBehaviour
         GameObject activePlayer = GetActivePlayerObject();
         if (activePlayer == null)
         {
-            Debug.LogWarning("[GameManager] No active player found after scene load.");
             yield break;
         }
 
         Transform spawnPoint = FindSpawnTransformInScene(loadedScene);
         if (spawnPoint == null)
         {
-            Debug.LogWarning($"[GameManager] No spawn point found in scene '{loadedScene.name}'. Use tag 'Respawn' or name 'SpawnPoint'.");
             yield break;
         }
 
@@ -81,6 +81,7 @@ public class GameManager : MonoBehaviour
             characterController.Move(Vector3.zero);
         }
 
+        //update player settings from the settings menu
         DesktopPlayer desktopPlayer = activePlayer.GetComponent<DesktopPlayer>();
         if (desktopPlayer != null)
         {
@@ -89,11 +90,11 @@ public class GameManager : MonoBehaviour
             desktopPlayer.ResetLook();
         }
 
-        Debug.Log($"[GameManager] Repositioned player '{activePlayer.name}' to spawn '{spawnPoint.name}' in scene '{loadedScene.name}'.");
     }
 
     private GameObject GetActivePlayerObject()
     {
+        //finds player object in scane based on game mode
         if (CurrentPlayMode == PlayMode.Desktop)
         {
             DesktopPlayer[] desktopPlayers = FindObjectsOfType<DesktopPlayer>(true);
@@ -126,11 +127,11 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("AudioManager instance not found!");
+            Debug.LogWarning("audiomanager not found!");
         }
     }
 
-
+    //stop music if its playing
     public void StopMusic()
     {
         if (AudioManager.Instance != null)
@@ -139,7 +140,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("AudioManager instance not found!");
+            Debug.LogWarning("audiomanager not found!");
         }
     }
 
@@ -164,6 +165,8 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+//this is to find the spawn point in the scene either by tag or by name, 
+//it searches through all the root objects and their children to find it, this way we can just put a spawn point object anywhere in the scene and it will find it as long as its tagged or named correctly
     private Transform FindChildByTag(Transform root, string tag)
     {
         if (root.CompareTag(tag))

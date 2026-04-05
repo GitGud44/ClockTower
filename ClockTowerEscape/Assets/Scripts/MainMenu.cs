@@ -13,6 +13,7 @@ public class MainMenu : MonoBehaviour
     
     private MenuToggle menuToggle;
 
+    //finds the menu toggle and applies the saved audio settinhgs
     void Start()
     {
         menuToggle = FindFirstObjectByType<MenuToggle>();
@@ -20,12 +21,14 @@ public class MainMenu : MonoBehaviour
         RefreshAudioSettings();
     }
 
+    //refreshes audio settings if needed
     void OnEnable()
     {
         menuToggle = FindFirstObjectByType<MenuToggle>();
         RefreshAudioSettings();
     }
 
+    //resume
     public void ResumeGame()
     {
         if (menuToggle != null)
@@ -40,18 +43,21 @@ public class MainMenu : MonoBehaviour
         if (accessibilityMenuPanel != null) accessibilityMenuPanel.SetActive(true);
     }
 
+    //sets sfx volume based on slider
     public void SetSFXVolume(float volume)
     {
         float normalizedVolume = Mathf.Clamp01(volume / AudioSliderMaxValue);
         SettingsState.SetSfxVolume(normalizedVolume);
     }
 
+    //same but with music
     public void SetMusicVolume(float volume)
     {
         float normalizedVolume = Mathf.Clamp01(volume / AudioSliderMaxValue);
         SettingsState.SetMusicVolume(normalizedVolume);
     }
 
+    //quit game
     public void QuitGame()
     {
         #if UNITY_EDITOR
@@ -61,6 +67,7 @@ public class MainMenu : MonoBehaviour
         #endif
     }
 
+    //gets the saved settings and applies them 
     private void RefreshAudioSettings()
     {
         float savedSfxVolume = SettingsState.GetSfxVolume();
@@ -74,6 +81,7 @@ public class MainMenu : MonoBehaviour
         SettingsState.ApplyRuntimeSettings();
     }
 
+    //sets slider configurations 
     private void ConfigureAudioSlider(Slider slider, UnityAction<float> listener, float value)
     {
         if (slider == null)

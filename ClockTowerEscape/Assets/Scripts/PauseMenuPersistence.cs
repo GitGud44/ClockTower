@@ -1,10 +1,12 @@
 using UnityEngine;
 
+//to keep the pause menu persistent across scenes
 public class PauseMenuPersistence : MonoBehaviour
 {
     public static PauseMenuPersistence Instance { get; private set; }
     public GameManager.PlayMode MenuMode { get; private set; } = GameManager.PlayMode.None;
 
+    //ensuress that theres only one pause menu in scene and persists it
     void Awake()
     {
         if (transform.root != transform)
@@ -33,6 +35,7 @@ public class PauseMenuPersistence : MonoBehaviour
             Instance = null;
     }
 
+    //initializes menu mode
     public void Initialize(GameManager.PlayMode mode)
     {
         MenuMode = mode;
